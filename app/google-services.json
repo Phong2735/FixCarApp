@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "331727132581",
+    "project_id": "fixcar-d6e61",
+    "storage_bucket": "fixcar-d6e61.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:331727132581:android:3b217704d22dbb19033a4c",
+        "android_client_info": {
+          "package_name": "com.example.fixcarapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9wE5bJsk1wd_x20Q-xr31pAzYOxT52uQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
