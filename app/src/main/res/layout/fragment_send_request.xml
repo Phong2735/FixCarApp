@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SendRequestFragment">
+    <ImageView
+        android:id="@+id/imgGoBack"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:src="@drawable/ic_goback"
+        android:layout_marginVertical="30dp"
+        android:layout_marginLeft="10dp"/>
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imgGoBack"
+        android:layout_marginHorizontal="30dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thông tin cần hỗ trợ"
+            android:textSize="16dp"
+            android:textStyle="bold"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_location"
+            android:text="Vị trí của bạn"/>
+        <androidx.appcompat.widget.AppCompatEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Sự cố gặp phải"
+            android:background="@drawable/custom_edittext"
+            android:padding="10dp"
+            android:layout_marginVertical="20dp"/>
+        <androidx.appcompat.widget.AppCompatEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Tinh trang xe"
+            android:background="@drawable/custom_edittext"
+            android:padding="10dp"/>
+        <Spinner
+            android:id="@+id/spinTypeVehicle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Loại phương tiện"
+            android:background="@drawable/custom_edittext"
+            android:padding="10dp"
+            android:layout_marginVertical="20dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ảnh hiện trường"/>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:src="@drawable/ic_notfield"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Chụp ảnh"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Thư viện"
+                android:layout_marginLeft="30dp"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnSendRequest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Gửi yêu cầu"/>
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,39 +1,44 @@
 package com.example.fixcarapp;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class Register extends AppCompatActivity {
+import java.util.Locale;
+
+public class RegisterActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    private EditText etName, etEmail, etPassword, etPasswordConfirm;
-    private Button btRegister;
+    private TextInputEditText etName, etEmail, etPassword, etPasswordConfirm;
+    private Button btnRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // Khởi tạo Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-
-        // Liên kết các view
-        etName = findViewById(R.id.et_NameRegister);
-        etEmail = findViewById(R.id.et_EmailRegister);
-        etPassword = findViewById(R.id.et_PasswordRegister);
-        etPasswordConfirm = findViewById(R.id.et_PasswordRegister2);
-        btRegister = findViewById(R.id.bt_Register);
-
-        // Thiết lập sự kiện cho nút Đăng ký
-        btRegister.setOnClickListener(view -> registerUser());
+        etName = findViewById(R.id.txtiename);
+        etEmail = findViewById(R.id.txtieemail);
+        etPassword = findViewById(R.id.txtiep);
+        etPasswordConfirm = findViewById(R.id.txtierp);
+        btnRegister = findViewById(R.id.btnRegister);
+        TextView tvLogin = findViewById(R.id.tvLogin);
+        tvLogin.setOnClickListener(view -> {
+            startActivity(new Intent(RegisterActivity.this,LoginActivity.class));
+        });
+        btnRegister.setOnClickListener(view -> registerUser());
     }
 
     private void registerUser() {
@@ -44,12 +49,12 @@ public class Register extends AppCompatActivity {
 
         // Kiểm tra các trường thông tin và mật khẩu xác nhận
         if (email.isEmpty() || password.isEmpty() || passwordConfirm.isEmpty()) {
-            Toast.makeText(Register.this, "Vui lòng điền đầy đủ thông tin!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, "Vui lòng điền đầy đủ thông tin!", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (!password.equals(passwordConfirm)) {
-            Toast.makeText(Register.this, "Mật khẩu không khớp!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, "Mật khẩu không khớp!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -59,14 +64,12 @@ public class Register extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         // Đăng ký thành công, lấy thông tin người dùng
                         FirebaseUser user = mAuth.getCurrentUser();
-                        Toast.makeText(Register.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
-
-                        // Chuyển đến màn hình đăng nhập hoặc màn hình chính sau khi đăng ký thành công
-                        startActivity(new Intent(Register.this, Login.class)); // Thay Login.class bằng màn hình bạn muốn điều hướng tới
+                        Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class)); // Thay Login.class bằng màn hình bạn muốn điều hướng tới
                         finish(); // Đóng màn hình đăng ký
                     } else {
                         // Đăng ký thất bại
-                        Toast.makeText(Register.this, "Đăng ký thất bại: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(RegisterActivity.this, "Đăng ký thất bại: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
     }
