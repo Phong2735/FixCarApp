@@ -3,24 +3,21 @@ package com.example.fixcarapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
+    private DatabaseReference databaseReference;
     private TextInputEditText etEmail, etPassword;
     private Button btLogin;
     private TextView tvRegister;
@@ -28,27 +25,20 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_login); // Liên kết layout chính
+        setContentView(R.layout.activity_login);
 
-        // Khởi tạo Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
 
-        // Liên kết các view
         etEmail = findViewById(R.id.txtieu);
         etPassword = findViewById(R.id.txtiep);
         btLogin = findViewById(R.id.btnLogin);
         tvRegister = findViewById(R.id.tvRegister);
-        btLogin.setOnClickListener(view -> {
-            loginUser();
-        });
-        tvRegister.setOnClickListener(view -> {
-            // Chuyển sang màn hình đăng ký
-            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-        });
+
+        btLogin.setOnClickListener(view -> loginUser());
+        tvRegister.setOnClickListener(view -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
     }
 
-    // Phương thức đăng nhập người dùng
     private void loginUser() {
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
@@ -57,14 +47,28 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(LoginActivity.this, "Vui lòng nhập email và mật khẩu!", Toast.LENGTH_SHORT).show();
             return;
         }
+
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        // Đăng nhập thành công, lấy thông tin người dùng
                         FirebaseUser user = mAuth.getCurrentUser();
-                        Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-                        // Chuyển sang màn hình chính hoặc màn hình khác sau khi đăng nhập thành công
-                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        if (user != null) {
+                            String userId = user.getUid();
+                            databaseReference.child(userId).get()
+                                    .addOnCompleteListener(task1 -> {
+                                        if (task1.isSuccessful() && task1.getResult().exists()) {
+                                            String role = task1.getResult().child("role").getValue(String.class);
+                                            if ("Người dùng".equals(role)) {
+                                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                            } else if ("Đơn vị cứu hộ".equals(role)) {
+                                                startActivity(new Intent(LoginActivity.this, RescueUnitActivity.class));
+                                            }
+                                            finish();
+                                        } else {
+                                            Toast.makeText(LoginActivity.this, "Không tìm thấy thông tin người dùng!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }
                     } else {
                         Toast.makeText(LoginActivity.this, "Đăng nhập thất bại: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }

@@ -18,6 +18,12 @@
         android:theme="@style/Theme.FixcarApp"
         tools:targetApi="31">
         <activity
+            android:name=".RescueUnitActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RescueUnit"
+            android:exported="false" />
+        <activity
             android:name=".MapActivity"
             android:exported="false" />
         <activity
@@ -40,7 +46,7 @@
         <!-- </intent-filter> -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="" />
+            android:value="AIzaSyCPLnuAWq3hKO6ezYM-e_Ld6Pwvl-Maj5A" />
     </application>
 
 </manifest>
