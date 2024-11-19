@@ -1,4 +1,4 @@
-package com.example.fixcarapp;
+package com.example.fixcarapp.DangNhap;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.fixcarapp.TrangChu.MainActivity;
+import com.example.fixcarapp.R;
+import com.example.fixcarapp.DangKy.RegisterActivity;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -61,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                                             if ("Người dùng".equals(role)) {
                                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                             } else if ("Đơn vị cứu hộ".equals(role)) {
-                                                startActivity(new Intent(LoginActivity.this, RescueUnitActivity.class));
+                                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                             }
                                             finish();
                                         } else {
@@ -69,6 +72,8 @@ public class LoginActivity extends AppCompatActivity {
                                         }
                                     });
                         }
+                        Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     } else {
                         Toast.makeText(LoginActivity.this, "Đăng nhập thất bại: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }

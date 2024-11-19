@@ -1,4 +1,4 @@
-package com.example.fixcarapp;
+package com.example.fixcarapp.TrangChu;
 
 import android.os.Bundle;
 
@@ -7,10 +7,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.fixcarapp.CenterDetailFragment;
+import com.example.fixcarapp.R;
+import com.example.fixcarapp.TrungTamHoTro.ListServiceFragment;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,5 +41,4 @@ public class MainActivity extends AppCompatActivity  {
             super.onBackPressed();
         }
     }
-
 }

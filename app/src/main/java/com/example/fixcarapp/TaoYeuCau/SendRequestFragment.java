@@ -1,4 +1,4 @@
-package com.example.fixcarapp;
+package com.example.fixcarapp.TaoYeuCau;
 
 import android.os.Bundle;
 
@@ -11,7 +11,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Toast;
+
+import com.example.fixcarapp.R;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,10 +44,8 @@ public class SendRequestFragment extends Fragment {
             }
         });
         imgClose.setOnClickListener(view1 -> {
-            getActivity().getSupportFragmentManager().popBackStack();
+            getParentFragmentManager().popBackStack();
         });
-
-
         return view;
     }
 }
