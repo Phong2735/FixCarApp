@@ -1,4 +1,4 @@
-package com.example.fixcarapp;
+package com.example.fixcarapp.TrangChu;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +21,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.fixcarapp.MapActivity;
+import com.example.fixcarapp.R;
+import com.example.fixcarapp.TaoYeuCau.SendRequestFragment;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,7 +43,6 @@ public class HomeFragment extends Fragment implements LocationListener {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_home, container, false);
         TextView tvDate = (TextView) view.findViewById(R.id.tvDate);
-        TextView tvAddRequest = view.findViewById(R.id.tvAddRequest);
         Date currentDate = new Date();
 
         tvLocation =view.findViewById(R.id.tvLocation);
@@ -61,18 +64,28 @@ public class HomeFragment extends Fragment implements LocationListener {
                 startActivity(intent);
             }
         });
-
         // Định dạng ngày giờ theo tiếng Việt
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("vi", "VN"));
         String formattedDate = dateFormat.format(currentDate);
         tvDate.setText(formattedDate);
-        tvAddRequest.setOnClickListener(view1 -> {
-            SendRequestFragment sendRequestFragment = new SendRequestFragment();
-            replaceFragment(sendRequestFragment);
-        });
         return view;
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        startLocationUpdates();
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopLocationUpdates();
+    }
+    private void stopLocationUpdates() {
+        if (locationManager != null) {
+            locationManager.removeUpdates(this);
+        }
+    }
     private void startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(requireActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
@@ -119,16 +132,4 @@ public class HomeFragment extends Fragment implements LocationListener {
             }
         }
     }
-
-
-
-    public void replaceFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frameLayout,fragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-    }
-
-
 }

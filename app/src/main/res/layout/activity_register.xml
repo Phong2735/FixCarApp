@@ -105,15 +105,26 @@
             android:layout_marginTop="10dp"
             android:layout_marginHorizontal="20dp"
             android:layout_gravity="center_horizontal">
+            <RadioGroup
+                android:id="@+id/rgUserType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_gravity="center_horizontal">>
             <RadioButton
+                android:id="@+id/rbUser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Người dùng"/>
             <RadioButton
+                android:id="@+id/rbRescueUnit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Đơn vị cứu hộ"
                 android:layout_marginLeft="20dp"/>
+            </RadioGroup>
         </LinearLayout>
         <Button
             android:id="@+id/btnRegister"

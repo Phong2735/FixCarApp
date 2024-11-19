@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".HomeFragment"
+    tools:context=".TrangChu.HomeFragment"
     android:orientation="vertical"
     android:layout_marginHorizontal="24dp">
 
@@ -72,11 +72,5 @@
         android:id="@+id/rcvlistCenter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-    <TextView
-        android:id="@+id/tvAddRequest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawableStart="@drawable/ic_add_circle"
-        android:text="Tạo yêu cầu cứu hộ/ sửa chữa"
-        android:textSize="16dp" />
+
 </LinearLayout>

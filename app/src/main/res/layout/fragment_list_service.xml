@@ -1,14 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ListServiceFragment">
+    tools:context=".TrungTamHoTro.ListServiceFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ImageView
+        android:id="@+id/imgGoBack"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:src="@drawable/ic_goback"
+        android:layout_marginVertical="30dp"
+        android:layout_marginLeft="10dp"/>
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="aaaa" />
-
-</FrameLayout>
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imgGoBack"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="10dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/edtSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Tìm kếm"
+                android:background="@drawable/edittext_corner"
+                android:drawableEnd="@drawable/ic_close"
+                android:inputType="text"/>
+            <ImageView
+                android:id="@+id/imgSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_search"
+                android:layout_gravity="center_vertical"
+                android:layout_marginHorizontal="10dp"/>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/tvNotice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Không tìm thấy dịch vụ này"
+            android:layout_marginTop="20dp"
+            android:visibility="gone"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcvListCenterHelper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</RelativeLayout>

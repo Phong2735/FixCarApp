@@ -1,28 +1,25 @@
-package com.example.fixcarapp;
+package com.example.fixcarapp.DangKy;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.fixcarapp.DangNhap.LoginActivity;
+import com.example.fixcarapp.R;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.util.Locale;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private TextInputEditText etName, etEmail, etPassword, etPasswordConfirm;
     private Button btnRegister;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +33,7 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister = findViewById(R.id.btnRegister);
         TextView tvLogin = findViewById(R.id.tvLogin);
         tvLogin.setOnClickListener(view -> {
-            startActivity(new Intent(RegisterActivity.this,LoginActivity.class));
+            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
         });
         btnRegister.setOnClickListener(view -> registerUser());
     }
@@ -58,7 +55,6 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        // Đăng ký người dùng với Firebase Authentication
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {

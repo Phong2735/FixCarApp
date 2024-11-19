@@ -21,10 +21,10 @@
             android:name=".MapActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".DangKy.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".DangNhap.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,14 +33,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
-            android:exported="true" /> <!-- <intent-filter> -->
-        <!-- <action android:name="android.intent.action.MAIN" /> -->
-        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-        <!-- </intent-filter> -->
+            android:name=".TrangChu.MainActivity"
+            android:exported="true" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="" />
+            android:value="AIzaSyDI7UbeRuPQNHiKTqcjgMfhh_l3pC3phLQ" />
     </application>
 
 </manifest>
