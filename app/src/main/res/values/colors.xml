@@ -4,4 +4,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="cl_text_den">#2E3A59</color>
     <color name="cl_text_xam_nhat">#B0B0B0</color>
+    <color name="blue">#2196F3</color>
+    <color name="red">#F44336</color>
 </resources>

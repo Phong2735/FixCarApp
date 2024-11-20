@@ -1,5 +1,6 @@
 package com.example.fixcarapp.DangNhap;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.fixcarapp.TrangChu.MainActivity;
 import com.example.fixcarapp.R;
 import com.example.fixcarapp.DangKy.RegisterActivity;
+import com.example.fixcarapp.TrungTamHoTro.RescueCenterActitvity;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,6 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputEditText etEmail, etPassword;
     private Button btLogin;
     private TextView tvRegister;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,10 @@ public class LoginActivity extends AppCompatActivity {
         btLogin = findViewById(R.id.btnLogin);
         tvRegister = findViewById(R.id.tvRegister);
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Đang đăng nhập...");
+        progressDialog.setCancelable(false); // Không cho phép hủy khi đang xử lý
+
         btLogin.setOnClickListener(view -> loginUser());
         tvRegister.setOnClickListener(view -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
     }
@@ -50,9 +57,10 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(LoginActivity.this, "Vui lòng nhập email và mật khẩu!", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        progressDialog.show();
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
+                    progressDialog.dismiss();
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
@@ -60,11 +68,12 @@ public class LoginActivity extends AppCompatActivity {
                             databaseReference.child(userId).get()
                                     .addOnCompleteListener(task1 -> {
                                         if (task1.isSuccessful() && task1.getResult().exists()) {
+                                            Intent intent = new Intent(LoginActivity.this, RescueCenterActitvity.class);
                                             String role = task1.getResult().child("role").getValue(String.class);
                                             if ("Người dùng".equals(role)) {
                                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                                            } else if ("Đơn vị cứu hộ".equals(role)) {
-                                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                            } else if ("Trung tâm cứu hộ".equals(role)) {
+                                                startActivity(intent);
                                             }
                                             finish();
                                         } else {
@@ -72,8 +81,6 @@ public class LoginActivity extends AppCompatActivity {
                                         }
                                     });
                         }
-                        Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     } else {
                         Toast.makeText(LoginActivity.this, "Đăng nhập thất bại: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }

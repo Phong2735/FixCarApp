@@ -27,11 +27,6 @@ public class AccountFragment extends Fragment {
             CenterInformationFragment centerInformationFragment = new CenterInformationFragment();
             centerInformationFragment.show(getChildFragmentManager(),"Information Center");
         });
-        tvUpdate.setOnClickListener(view1 -> {
-            CenterInformationFragment centerInformationFragment = new CenterInformationFragment();
-            centerInformationFragment.updateCenter();
-            centerInformationFragment.show(getChildFragmentManager(),"Update ");
-        });
         return view;
     }
 }

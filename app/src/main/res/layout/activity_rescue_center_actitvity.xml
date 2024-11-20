@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TrungTamHoTro.RescueCenterActitvity"
+    android:layout_marginHorizontal="24dp">
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Xin chào"
+        android:textSize="20dp"
+        android:textColor="@color/cl_text_den"
+        android:layout_marginVertical="30dp"
+        android:textStyle="bold" />
+    <TextView
+        android:id="@+id/tvUpdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cập nhật thông tin"
+        android:layout_below="@+id/tvName" />
+    <TextView
+        android:id="@+id/tvChangePass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Đổi mật khẩu"
+        android:layout_marginTop="8dp"
+        android:layout_below="@id/tvUpdate"/>
+    <TextView
+        android:id="@+id/tvName1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nguyen Hong Phong"
+        android:layout_toRightOf="@+id/tvName"
+        android:layout_marginTop="30dp"
+        android:layout_alignBottom="@+id/tvName"
+        android:layout_marginLeft="5dp"
+        android:visibility="gone"/>
+    <TextView
+        android:id="@+id/tvWarning"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Xin hãy cập nhật đầy đủ thông tin trước khi bắt đầu xác nhận yêu cầu. Vui lòng điền thông tin tại đây "
+        android:layout_below="@+id/tvChangePass"
+        android:visibility="gone"/>
+    <TextView
+        android:id="@+id/tv1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Danh sách yêu cầu"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        android:layout_below="@+id/tvWarning"
+        android:layout_marginTop="10dp"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcvListRequest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv1"
+        android:layout_marginTop="10dp" />
+</RelativeLayout>

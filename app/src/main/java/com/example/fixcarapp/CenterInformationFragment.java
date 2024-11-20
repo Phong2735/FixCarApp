@@ -1,6 +1,7 @@
 package com.example.fixcarapp;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -93,6 +94,23 @@ public class CenterInformationFragment extends DialogFragment {
                                 }
                             }).show();
                 }
+            }
+        });
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            String name = edtName.getText().toString();
+            String adress = edtAdress.getText().toString();
+            String sdt = edtSDT.getText().toString();
+            String email = edtEmail.getText().toString();
+            String mota = edtDescription.getText().toString();
+            @Override
+            public void onClick(View view) {
+                ContentValues values = new ContentValues();
+                values.put("tenCenter",name);
+                values.put("tenCenter",name);
+                values.put("tenCenter",name);
+                values.put("tenCenter",name);
+                values.put("tenCenter",name);
+
             }
         });
         return  view;

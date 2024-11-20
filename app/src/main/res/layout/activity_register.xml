@@ -31,7 +31,7 @@
             android:layout_gravity="center"
             android:id="@+id/txtilname"
             android:layout_marginTop="20dp"
-            android:hint="Họ và tên"
+            android:hint="Họ tên hoặc tên trung tâm "
             android:alpha="0.7"
             android:gravity="center_vertical"
             style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox">
@@ -116,7 +116,7 @@
                 android:id="@+id/rbRescueUnit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Đơn vị cứu hộ"
+                android:text="Trung tâm cứu hộ"
                 android:layout_marginLeft="20dp" />
         </RadioGroup>
         <Button
