@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Request ID -->
+    <ImageView
+        android:id="@+id/imgvBack"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_arrow_back" />
+
+    <TextView
+        android:id="@+id/tvId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ID: "
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <!-- Request Address -->
+    <TextView
+        android:id="@+id/tvAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Address"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <!-- Problem Description -->
+    <TextView
+        android:id="@+id/tvProblem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Problem"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp" />
+
+    <!-- Vehicle Information -->
+    <TextView
+        android:id="@+id/tvVehicle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vehicle"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp" />
+
+    <!-- Phone Number -->
+    <TextView
+        android:id="@+id/tvPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Phone"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp" />
+
+    <!-- Email -->
+    <TextView
+        android:id="@+id/tvEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp" />
+
+    <!-- Scene Photo -->
+    <ImageView
+        android:id="@+id/imgScenePhoto"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="8dp"
+        android:scaleType="centerCrop" />
+
+    <!-- Back Button -->
+    <ImageView
+        android:id="@+id/imgvPhone"
+        android:layout_width="102dp"
+        android:layout_height="48dp"
+        app:srcCompat="@android:drawable/ic_menu_call" />
+
+    <!-- Complete Button -->
+
+    <Button
+        android:id="@+id/btnComplete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Complete"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#5EEA45"
+        android:textColor="@android:color/white"/>
+
+</LinearLayout>
