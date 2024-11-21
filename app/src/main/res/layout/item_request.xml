@@ -1,65 +1,86 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
-    <LinearLayout
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/tvId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/tvName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Request 01"
-            android:fontFamily="@font/font"
-            android:textSize="20dp"
-            android:layout_marginLeft="10dp"/>
-        <TextView
-            android:id="@+id/tvNamePersonRequest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ten nguoi yeu cau"
-            android:textColor="@color/cl_text_xam_nhat"
-            android:layout_marginLeft="20dp"/>
-        <TextView
-            android:id="@+id/tvAdressPerson"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Dia chi nguoi yeu cau"
-            android:textColor="@color/cl_text_xam_nhat"
-            android:layout_marginLeft="20dp"/>
-        <TextView
-            android:id="@+id/tvSdtPerson"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="SDT"
-            android:textColor="@color/cl_text_xam_nhat"
-            android:layout_marginLeft="20dp"/>
-        <TextView
-            android:id="@+id/tvCondition"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tình trạng"
-            android:layout_marginLeft="20dp"
-            android:textColor="@color/cl_text_xam_nhat"/>
-    </LinearLayout>
+        android:text="Id" />
+
+    <TextView
+        android:id="@+id/tvAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Address"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/tvProblem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Problem"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp"/>
+
+    <TextView
+        android:id="@+id/tvVehicle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vehicle"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp"/>
+<!--    <TextView-->
+<!--        android:id="@+id/tvStatus"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Status"-->
+<!--        android:layout_below="@id/tvVehicle"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textSize="14sp" />-->
+
+    <TextView
+        android:id="@+id/tvPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Phone"
+        android:layout_below="@id/tvVehicle"
+        android:textColor="@color/black"
+        android:textSize="14sp" />
+
+
+    <ImageView
+        android:id="@+id/imgScenePhoto"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="8dp"
+        android:scaleType="centerCrop" />
+
     <Button
-        android:id="@+id/btnAccept"
-        android:layout_width="70dp"
-        android:layout_height="40dp"
-        android:text="Xác nhận"
-        android:textSize="8dp"
-        android:layout_gravity="center_vertical"
-        android:backgroundTint="@color/blue"/>
-    <Button
-        android:id="@+id/btnCancle"
-        android:layout_width="70dp"
-        android:layout_height="40dp"
-        android:text="Từ chối"
-        android:textSize="8dp"
-        android:layout_gravity="center_vertical"
-        android:backgroundTint="@color/red"
-        android:layout_marginHorizontal="10dp"/>
+        android:id="@+id/btnConfirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvVehicle"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#5EEA45"
+        android:padding="8dp"
+        android:text="Xác nhận cứu hộ"
+        android:textColor="@color/white" />
+
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="wrap_content"
+        android:layout_height="2dp"
+        android:background="#135C11" />
+
 </LinearLayout>
+
+
+
+
+

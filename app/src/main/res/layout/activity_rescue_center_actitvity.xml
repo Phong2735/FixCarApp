@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TrungTamHoTro.RescueCenterActitvity"
+    tools:context=".TrungTam.RescueCenterActitvity"
     android:layout_marginHorizontal="24dp">
     <TextView
         android:id="@+id/tvName"
@@ -55,6 +55,7 @@
         android:textStyle="bold"
         android:layout_below="@+id/tvWarning"
         android:layout_marginTop="10dp"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcvListRequest"
         android:layout_width="match_parent"

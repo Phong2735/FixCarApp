@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.fixcarapp.TrangChu.MainActivity;
 import com.example.fixcarapp.R;
 import com.example.fixcarapp.DangKy.RegisterActivity;
-import com.example.fixcarapp.TrungTamHoTro.RescueCenterActitvity;
+import com.example.fixcarapp.TrungTam.RescueCenterActitvity;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
