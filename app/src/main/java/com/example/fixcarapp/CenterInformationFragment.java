@@ -20,17 +20,24 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 public class CenterInformationFragment extends DialogFragment {
-    EditText edtName,edtAdress,edtSDT,edtEmail,edtDescription;
+    EditText edtName,edtAdress,edtSDT,edtDescription;
     Button btnAdd,btnUpdate,btnDelete;
     ImageView imgLogo,imgBack;
     DBHelper dbHelper;
     byte[] logo;
+    String email,oldname;
+    private DatabaseReference databaseReference;
+    FirebaseUser user;
     private static final int PICK_IMAGE_REQUEST = 1;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,14 +47,25 @@ public class CenterInformationFragment extends DialogFragment {
         edtName = view.findViewById(R.id.edtName);
         edtAdress = view.findViewById(R.id.edtAdress);
         edtDescription = view.findViewById(R.id.edtDescription);
-        edtEmail = view.findViewById(R.id.edtEmail);
         edtSDT = view.findViewById(R.id.edtSDT);
         imgLogo = view.findViewById(R.id.imgLogo);
         imgBack = view.findViewById(R.id.imgBack);
-        btnAdd = view.findViewById(R.id.btnAdd);
-        btnAdd.setVisibility(View.VISIBLE);
         btnDelete = view.findViewById(R.id.btnDelete);
         btnUpdate = view.findViewById(R.id.btnUpdate);
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user!=null)
+        {
+            String userID = user.getUid();
+            databaseReference.child(userID).get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful() && task.getResult().exists()) {
+                            oldname = task.getResult().child("name").getValue(String.class);
+                            email = task.getResult().child("email").getValue(String.class);
+                        }
+                    });
+        }
+        edtName.setHint(oldname);
         imgBack.setOnClickListener(v-> {
             dismiss();
         });
@@ -56,61 +74,46 @@ public class CenterInformationFragment extends DialogFragment {
             pickImageLauncher.launch(intent);
         });
         dbHelper = new DBHelper(getActivity());
-        btnAdd.setOnClickListener(new View.OnClickListener() {
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String name = edtName.getText().toString();
                 String adress = edtAdress.getText().toString();
                 String sdt = edtSDT.getText().toString();
-                String email = edtEmail.getText().toString();
                 String mota = edtDescription.getText().toString();
-                String error="";
-                if(email.isEmpty()||name.isEmpty()||sdt.isEmpty()||adress.isEmpty()) {
+                String error= "";
+                if(logo==null||mota.isEmpty()||sdt.isEmpty()||adress.isEmpty()) {
                     error = "Không được để trống";
-                    if (name.isEmpty())
-                        error = error + " tên trung tâm,";
+                    if (logo==null)
+                        error = error + " logo,";
                     if (sdt.isEmpty())
                         error = error + " số điện thoại,";
+                    if (mota.isEmpty())
+                        error = error + " mô tả, ";
                     if (adress.isEmpty())
-                        error = error + " địa chỉ, ";
-                    if (email.isEmpty())
-                        error = error + " email ";
+                        error = error + " địa chỉ ";
                     Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
                 }
-                else {
-                    Snackbar.make(view,"Thành công",Snackbar.LENGTH_LONG)
-                            .setAction("Đồng ý", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    dbHelper.insertCenter(logo,name,sdt,adress,email,mota);
-//                                    Item_Center center = new Item_Center();
-//                                    center.setLogo(logo);
-//                                    center.setTenCenter(name);
-//                                    center.setDiachiCenter(adress);
-//                                    center.setSdt(sdt);
-//                                    center.setMota(mota);
-//                                    center.setEmail(email);
-                                    dismiss();
-                                }
-                            }).show();
+                else  {
+                    if (dbHelper.updateCenter(logo, name, sdt, adress, email, mota) > 0) {
+                        Snackbar.make(view,"Cập nhật thành công",Snackbar.LENGTH_LONG)
+                                .setAction("Đồng ý", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        dismiss();
+                                    }
+                                }).show();
+                    }
+                    else {
+                        Snackbar.make(view,"Cập nhật thất bại",Snackbar.LENGTH_LONG)
+                                .setAction("Đồng ý", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        dismiss();
+                                    }
+                                }).show();
+                    }
                 }
-            }
-        });
-        btnUpdate.setOnClickListener(new View.OnClickListener() {
-            String name = edtName.getText().toString();
-            String adress = edtAdress.getText().toString();
-            String sdt = edtSDT.getText().toString();
-            String email = edtEmail.getText().toString();
-            String mota = edtDescription.getText().toString();
-            @Override
-            public void onClick(View view) {
-                ContentValues values = new ContentValues();
-                values.put("tenCenter",name);
-                values.put("tenCenter",name);
-                values.put("tenCenter",name);
-                values.put("tenCenter",name);
-                values.put("tenCenter",name);
-
             }
         });
         return  view;
@@ -146,60 +149,6 @@ public class CenterInformationFragment extends DialogFragment {
         } catch (IOException e) {
             e.printStackTrace();
             return null;
-        }
-    }
-    public void updateCenter()
-    {
-        if(getView()!=null) {
-            btnUpdate.setVisibility(View.VISIBLE);
-            btnDelete.setVisibility(View.VISIBLE);
-            imgBack.setOnClickListener(v -> {
-                dismiss();
-            });
-            imgLogo.setOnClickListener(v -> {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                pickImageLauncher.launch(intent);
-            });
-            dbHelper = new DBHelper(getActivity());
-            btnDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    String name = edtName.getText().toString();
-                    String adress = edtAdress.getText().toString();
-                    String sdt = edtSDT.getText().toString();
-                    String email = edtEmail.getText().toString();
-                    String mota = edtDescription.getText().toString();
-                    String error = "";
-                    if (email.isEmpty() || name.isEmpty() || sdt.isEmpty() || adress.isEmpty()) {
-                        error = "Không được để trống";
-                        if (name.isEmpty())
-                            error = error + " tên trung tâm,";
-                        if (sdt.isEmpty())
-                            error = error + " số điện thoại,";
-                        if (adress.isEmpty())
-                            error = error + " địa chỉ, ";
-                        if (email.isEmpty())
-                            error = error + " email ";
-                        Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
-                    } else {
-                        Snackbar.make(view, "Thành công", Snackbar.LENGTH_LONG)
-                                .setAction("Đồng ý", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        dbHelper.insertCenter(logo, name, sdt, adress, email, mota);
-//                                    Item_Center center = new Item_Center();
-//                                    center.setLogo(logo);
-//                                    center.setTenCenter(name);
-//                                    center.setDiachiCenter(adress);
-//                                    center.setSdt(sdt);
-//                                    center.setMota(mota);
-//                                    center.setEmail(email);
-                                        dismiss();
-                                    }
-                                }).show();
-                    }
-                }
-            });
         }
     }
 }

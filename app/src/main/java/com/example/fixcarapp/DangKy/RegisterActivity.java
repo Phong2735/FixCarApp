@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.fixcarapp.DBHelper;
 import com.example.fixcarapp.DangNhap.LoginActivity;
 import com.example.fixcarapp.R;
 import com.google.android.material.textfield.TextInputEditText;
@@ -25,6 +26,7 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputEditText etName, etEmail, etPassword, etPasswordConfirm;
     private RadioGroup rgUserType;
     private Button btnRegister;
+    DBHelper dbHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
         etPasswordConfirm = findViewById(R.id.txtierp);
         rgUserType = findViewById(R.id.rgUserType);
         btnRegister = findViewById(R.id.btnRegister);
-
+        dbHelper = new DBHelper(this);
         TextView tvLogin = findViewById(R.id.tvLogin);
         tvLogin.setOnClickListener(view -> {
             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
@@ -84,6 +86,7 @@ public class RegisterActivity extends AppCompatActivity {
                             databaseReference.child(userId).setValue(newUser)
                                     .addOnCompleteListener(task1 -> {
                                         if (task1.isSuccessful()) {
+                                            dbHelper.insertCenter(null,name,"","",email,"");
                                             Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
                                             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                                             finish();

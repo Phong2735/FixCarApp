@@ -13,8 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.example.fixcarapp.TaoYeuCau.SendRequestFragment;
+import  com.example.fixcarapp.SendRequestFragment;
 import com.example.fixcarapp.TrungTamHoTro.ListServiceFragment;
 
 public class CenterDetailFragment extends Fragment {

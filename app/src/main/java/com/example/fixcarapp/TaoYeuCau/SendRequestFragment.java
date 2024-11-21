@@ -45,8 +45,6 @@ public class SendRequestFragment extends Fragment {
         imgClose.setOnClickListener(view1 -> {
             getActivity().getSupportFragmentManager().popBackStack();
         });
-
-
         return view;
     }
 }

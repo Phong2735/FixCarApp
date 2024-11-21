@@ -36,34 +36,21 @@ public class DBHelper extends SQLiteOpenHelper {
             return false;
         return true;
     }
-//    public int updateCenter(byte[] logo,String tenCenter, String sdt, String diachiCenter,String email, String mota)
-//    {
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        ContentValues values =new ContentValues();
-//        values.put("logo",logo);
-//        values.put("tenCenter",tenCenter);
-//        values.put("sdt",sdt);
-//        values.put("diachiCenter",diachiCenter);
-//        values.put("email",email);
-//        values.put("mota",mota);
-//        String selectQuery = "SELECT id FROM centers WHERE email = ?";
-//        Cursor cursor = db.rawQuery(selectQuery, new String[] {email});
-//
-//        int rowsUpdated = 0;
-//        if (cursor != null && cursor.moveToFirst()) {
-//            // Lấy id từ cursorx
-//            int id = cursor.getInt(cursor.getColumnIndex("id"));
-//
-//            // Cập nhật dữ liệu
-//            String whereClause = "id = ?";
-//            String[] whereArgs = new String[] {String.valueOf(id)};
-//            rowsUpdated = db.update("centers", values, whereClause, whereArgs);
-//
-//            cursor.close();
-//        }
-//
-//        return rowsUpdated;
-//    }
+    public int updateCenter(byte[] logo,String tenCenter, String sdt, String diachiCenter,String email, String mota)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values =new ContentValues();
+        values.put("logo",logo);
+        values.put("tenCenter",tenCenter);
+        values.put("sdt",sdt);
+        values.put("diachiCenter",diachiCenter);
+        values.put("mota",mota);
+
+        String whereClause = "email=?";
+        String[] whereArgs = new String[] {""+ email +""};
+        int rowsUpdated = db.update("db_center",values,whereClause,whereArgs);
+        return rowsUpdated;
+    }
     public Cursor getData(String sql){
         SQLiteDatabase dtb = getReadableDatabase();
         return dtb.rawQuery(sql,null);
