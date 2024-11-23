@@ -26,7 +26,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import android.Manifest;
-import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -46,7 +45,7 @@ import com.example.fixcarapp.ApiService;
 import com.example.fixcarapp.MapActivity;
 import com.example.fixcarapp.R;
 import com.example.fixcarapp.ScenePhoto;
-import com.example.fixcarapp.TrungTam.Request;
+import com.example.fixcarapp.TaoYeuCau.Request;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -59,7 +58,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -88,6 +89,7 @@ public class SendRequestFragment extends Fragment implements LocationListener {
     private FirebaseUser user = auth.getCurrentUser();
     private Uri photoGalleryUri,cameraUri,imageToUseUri;
     private ProgressDialog progressDialog;
+
     ActivityResultLauncher<Uri> activityResultLauncherCamera;
     ActivityResultLauncher<Intent> activityResultLauncherPhotoGallery = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
@@ -198,6 +200,12 @@ public class SendRequestFragment extends Fragment implements LocationListener {
                 openCamera();
             }
         });
+
+        Date currentDate = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, hh:mm:ss dd/MM/yyyy", new Locale("vi", "VN"));
+        String formattedDate = dateFormat.format(currentDate);
+        Log.e("time", formattedDate);
+
         return view;
     }
 
@@ -303,7 +311,10 @@ public class SendRequestFragment extends Fragment implements LocationListener {
                         }
                     }
                 }
-                Request request = new Request(nextId,phone, incident, problem, longitude, latitude,currentLocation, vehicle,scenePhoto, "PENDING",1,user.getEmail());
+                Date currentDate = new Date();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, hh:mm:ss dd/MM/yyyy", new Locale("vi", "VN"));
+                String time = dateFormat.format(currentDate);
+                Request request = new Request(nextId,phone, incident, problem, longitude, latitude,currentLocation, vehicle,scenePhoto, "PENDING",1,user.getEmail(),time);
                 myRequestsRef.child(String.valueOf(nextId)).setValue(request, new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {

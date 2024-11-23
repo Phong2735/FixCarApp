@@ -39,13 +39,15 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         if (request == null){
             return;
         }
-        holder.tv_incident.setText("Sự cố: " + request.getIncident());
-        holder.tv_problem.setText("Tình trạng: " + request.getProblem());
-        holder.tv_vehicle.setText("Loại phương tiện: " + request.getVehicle());
+        holder.tv_incident.setText(String.format("Sự cố: %s", request.getIncident()));
+        holder.tv_problem.setText(String.format("Tình trạng: %s", request.getProblem()));
+        holder.tv_vehicle.setText(String.format("Loại phương tiện: %s", request.getVehicle()));
         holder.tv_address.setText(request.getAddress());
-        holder.tv_phone.setText("Số điện thoại: " + request.getPhone());
-        holder.tv_status.setText("Trạng thái: " + ("PENDING".equals(request.getStatus()) ? "Chờ xác nhận" : "Đã xác nhận"));
-        Glide.with(context).load(request.getScenePhoto()).into(holder.imv_scene_photo);
+        holder.tv_phone.setText(String.format("Số điện thoại: %s", request.getPhone()));
+        holder.tv_time.setText(String.format("Thời gian: %s", request.getTime()));
+        holder.tv_status.setText(String.format("Trạng thái: %s", "PENDING".equals(request.getStatus()) ? "Chờ xác nhận" : "Đã xác nhận"));
+
+        Glide.with(context).load(request.getScenePhoto()).placeholder(R.drawable.ic_notfield).into(holder.imv_scene_photo);
 
         holder.imv_location.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +71,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     }
 
     public static class HistoryViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_incident, tv_problem, tv_vehicle, tv_address,tv_phone,tv_status;
+        TextView tv_incident, tv_problem, tv_vehicle, tv_address,tv_phone,tv_status,tv_time;
         ImageView imv_scene_photo,imv_location;
         public HistoryViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -81,6 +83,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
             tv_status = itemView.findViewById(R.id.tv_status);
             imv_scene_photo = itemView.findViewById(R.id.imv_scene_photo);
             imv_location = itemView.findViewById(R.id.imv_location);
+            tv_time = itemView.findViewById(R.id.tv_time);
 
         }
     }

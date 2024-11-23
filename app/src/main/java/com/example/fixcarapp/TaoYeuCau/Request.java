@@ -13,12 +13,13 @@ public class Request {
     String status;
     int centerId;
     String email;
+    String time;
 
     public Request(){
 
     }
 
-    public Request(int id, String phone, String incident, String problem, double longitude, double latitude, String address, String vehicle, String scenePhoto, String status, int centerId, String email) {
+    public Request(int id, String phone, String incident, String problem, double longitude, double latitude, String address, String vehicle, String scenePhoto, String status, int centerId, String email, String time) {
         this.id = id;
         this.phone = phone;
         this.incident = incident;
@@ -31,6 +32,7 @@ public class Request {
         this.status = status;
         this.centerId = centerId;
         this.email = email;
+        this.time = time;
     }
 
     public int getId() {
@@ -127,5 +129,13 @@ public class Request {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }
