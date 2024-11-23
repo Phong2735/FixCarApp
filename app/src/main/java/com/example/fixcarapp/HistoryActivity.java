@@ -21,6 +21,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class HistoryActivity extends AppCompatActivity {
     private FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -58,9 +60,14 @@ public class HistoryActivity extends AppCompatActivity {
                     Request request = postSnapshot.getValue(Request.class);
                     requestList.add(request);
                 }
+                Collections.sort(requestList, new Comparator<Request>() {
+                    @Override
+                    public int compare(Request r1, Request r2) {
+                        return Integer.compare(r2.getId(), r1.getId());
+                    }
+                });
                 historyAdapter.notifyDataSetChanged();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
