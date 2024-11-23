@@ -23,6 +23,10 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.fixcarapp.MapActivity;
 import com.example.fixcarapp.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -34,16 +38,32 @@ public class HomeFragment extends Fragment implements LocationListener {
     LocationManager locationManager;
     double longitude, latitude;
     String currentLocation;
-    TextView tvLocation;
+    TextView tvLocation,tvName;
     ImageView icLocation;
+    private DatabaseReference databaseReference;
+    FirebaseUser user;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_home, container, false);
         TextView tvDate = (TextView) view.findViewById(R.id.tvDate);
+        tvName = view.findViewById(R.id.tvName);
         Date currentDate = new Date();
-
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user!=null)
+        {
+            String userID = user.getUid();
+            databaseReference.child(userID).get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful() && task.getResult().exists()) {
+                            String name = task.getResult().child("name").getValue(String.class);
+                            tvName.setVisibility(View.VISIBLE);
+                            tvName.setText(name);
+                        }
+                    });
+        }
         tvLocation =view.findViewById(R.id.tvLocation);
         locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(requireActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
