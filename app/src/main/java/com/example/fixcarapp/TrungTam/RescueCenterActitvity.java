@@ -1,6 +1,7 @@
 package com.example.fixcarapp.TrungTam;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -23,7 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 //import com.bumptech.glide.request.Request;
 
-import com.example.fixcarapp.TrungTam.Request;
+import com.example.fixcarapp.TaoYeuCau.Request;
 
 import com.example.fixcarapp.CenterInformationFragment;
 import com.example.fixcarapp.R;
@@ -41,7 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RescueCenterActitvity extends AppCompatActivity {
-    TextView tvName,tvWarning,tvUpdate,tvChangePass;
+    TextView tvName,tvWarning,tvUpdate,tvChangePass, tvCompletedRequests;
     RecyclerView rcvListRequest;
     FirebaseUser user;
     private DatabaseReference databaseReference;
@@ -88,6 +89,14 @@ public class RescueCenterActitvity extends AppCompatActivity {
         }
 
 
+        tvCompletedRequests = findViewById(R.id.tvCompletedRequests);
+        tvCompletedRequests.setOnClickListener(v -> {
+            Intent intent = new Intent(RescueCenterActitvity.this, CompleteActivity.class);
+            startActivity(intent);
+        });
+
+
+
         // Firebase authentication
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
@@ -114,25 +123,27 @@ public class RescueCenterActitvity extends AppCompatActivity {
         requestAdapter = new RequestAdapter(this, requestList);
         rcvListRequest.setLayoutManager(new LinearLayoutManager(this));
         rcvListRequest.setAdapter(requestAdapter);
+
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                requestList.clear();  // Xóa dữ liệu cũ
+                List<Request> updatedRequestList = new ArrayList<>(); // Tạo danh sách mới để lưu dữ liệu
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Request request = snapshot.getValue(Request.class);
-                    if (request != null) {
-                        requestList.add(request);  // Thêm yêu cầu mới vào danh sách
+                    if (request != null && !"COMPLETED".equals(request.getStatus())) {
+                        updatedRequestList.add(request); // Thêm dữ liệu vào danh sách mới nếu chưa hoàn thành
                     }
                 }
-                requestAdapter.notifyDataSetChanged();  // Cập nhật adapter
+                // Cập nhật adapter thông qua phương thức setData
+                requestAdapter.setData(updatedRequestList);
             }
+
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e("RescueCenter", "Database error: " + databaseError.getMessage());
             }
         });
-
 
 
 

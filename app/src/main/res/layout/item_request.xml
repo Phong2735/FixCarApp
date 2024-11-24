@@ -34,14 +34,6 @@
         android:text="Vehicle"
         android:textSize="14sp"
         android:layout_marginTop="4dp"/>
-<!--    <TextView-->
-<!--        android:id="@+id/tvStatus"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Status"-->
-<!--        android:layout_below="@id/tvVehicle"-->
-<!--        android:textColor="@color/black"-->
-<!--        android:textSize="14sp" />-->
 
     <TextView
         android:id="@+id/tvPhone"
@@ -50,6 +42,12 @@
         android:text="Phone"
         android:layout_below="@id/tvVehicle"
         android:textColor="@color/black"
+        android:textSize="14sp" />
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Time"
         android:textSize="14sp" />
 
 
@@ -60,16 +58,38 @@
         android:layout_marginTop="8dp"
         android:scaleType="centerCrop" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnConfirm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#5EEA45"
+            android:text="Xác nhận cứu hộ"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/btnCancle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#E32727"
+            android:text="Không nhận"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
     <Button
-        android:id="@+id/btnConfirm"
+        android:id="@+id/btnComplete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvVehicle"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="#5EEA45"
-        android:padding="8dp"
-        android:text="Xác nhận cứu hộ"
-        android:textColor="@color/white" />
+        android:text="Hoàn thành"
+        android:visibility="gone"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
 
     <View
