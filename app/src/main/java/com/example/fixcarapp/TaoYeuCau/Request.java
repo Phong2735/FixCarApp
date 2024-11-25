@@ -11,15 +11,14 @@ public class Request {
     String vehicle;
     String scenePhoto;
     String status;
-    int centerId;
+    String centerId;
     String email;
-    String time;
 
     public Request(){
 
     }
 
-    public Request(int id, String phone, String incident, String problem, double longitude, double latitude, String address, String vehicle, String scenePhoto, String status, int centerId, String email, String time) {
+    public Request(int id, String phone, String incident, String problem, double longitude, double latitude, String address, String vehicle, String scenePhoto, String status, String centerId, String email) {
         this.id = id;
         this.phone = phone;
         this.incident = incident;
@@ -32,7 +31,6 @@ public class Request {
         this.status = status;
         this.centerId = centerId;
         this.email = email;
-        this.time = time;
     }
 
     public int getId() {
@@ -115,11 +113,11 @@ public class Request {
         this.status = status;
     }
 
-    public int getCenterId() {
+    public String getCenterId() {
         return centerId;
     }
 
-    public void setCenterId(int centerId) {
+    public void setCenterId(String centerId) {
         this.centerId = centerId;
     }
 
@@ -129,13 +127,5 @@ public class Request {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
     }
 }

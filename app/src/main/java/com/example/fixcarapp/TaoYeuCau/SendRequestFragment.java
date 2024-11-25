@@ -26,6 +26,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import android.Manifest;
+import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,7 +46,9 @@ import com.example.fixcarapp.ApiService;
 import com.example.fixcarapp.MapActivity;
 import com.example.fixcarapp.R;
 import com.example.fixcarapp.ScenePhoto;
-import com.example.fixcarapp.TaoYeuCau.Request;
+import com.example.fixcarapp.TrungTam.DanhSachTrungTam.CenterDetailFragment;
+import com.example.fixcarapp.TrungTam.DanhSachTrungTam.Item_Center;
+import com.example.fixcarapp.TrungTam.Request;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -58,9 +61,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -89,7 +90,14 @@ public class SendRequestFragment extends Fragment implements LocationListener {
     private FirebaseUser user = auth.getCurrentUser();
     private Uri photoGalleryUri,cameraUri,imageToUseUri;
     private ProgressDialog progressDialog;
-
+    public static SendRequestFragment newInstance(Item_Center itemCenter)
+    {
+        Bundle args = new Bundle();
+        SendRequestFragment fragment = new SendRequestFragment();
+        args.putSerializable("item_center",itemCenter);
+        fragment.setArguments(args);
+        return fragment;
+    }
     ActivityResultLauncher<Uri> activityResultLauncherCamera;
     ActivityResultLauncher<Intent> activityResultLauncherPhotoGallery = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
@@ -133,7 +141,7 @@ public class SendRequestFragment extends Fragment implements LocationListener {
             }
         });
         imgClose.setOnClickListener(view1 -> {
-            getActivity().getSupportFragmentManager().popBackStack();
+            getParentFragmentManager().popBackStack();
         });
         tvLocation =view.findViewById(R.id.tvLocation);
         locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -200,12 +208,6 @@ public class SendRequestFragment extends Fragment implements LocationListener {
                 openCamera();
             }
         });
-
-        Date currentDate = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, hh:mm:ss dd/MM/yyyy", new Locale("vi", "VN"));
-        String formattedDate = dateFormat.format(currentDate);
-        Log.e("time", formattedDate);
-
         return view;
     }
 
@@ -303,6 +305,7 @@ public class SendRequestFragment extends Fragment implements LocationListener {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int nextId = 1;
+                String centerId = "";
                 if (snapshot.exists()) {
                     for (DataSnapshot child : snapshot.getChildren()) {
                         String lastKey = child.getKey();
@@ -311,10 +314,14 @@ public class SendRequestFragment extends Fragment implements LocationListener {
                         }
                     }
                 }
-                Date currentDate = new Date();
-                SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, hh:mm:ss dd/MM/yyyy", new Locale("vi", "VN"));
-                String time = dateFormat.format(currentDate);
-                Request request = new Request(nextId,phone, incident, problem, longitude, latitude,currentLocation, vehicle,scenePhoto, "PENDING",1,user.getEmail(),time);
+                Bundle args = getArguments();
+                if(args!=null) {
+                    Item_Center itemCenter = (Item_Center) args.getSerializable("item_center");
+                    if (itemCenter != null) {
+                        centerId = itemCenter.getCenterId();
+                    }
+                }
+                Request request = new Request(nextId,phone, incident, problem, longitude, latitude,currentLocation, vehicle,scenePhoto, "PENDING",centerId,user.getEmail());
                 myRequestsRef.child(String.valueOf(nextId)).setValue(request, new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {

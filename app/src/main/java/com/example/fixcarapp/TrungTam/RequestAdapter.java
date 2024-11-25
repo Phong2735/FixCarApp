@@ -138,8 +138,5 @@ private void updateRequestStatus(int requestId) {
                 Toast.makeText(context, "Cập nhật trạng thái thất bại: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             });
 }
-
-
-
 }
 

@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.fixcarapp.TrungTamHoTro.ListServiceFragment;
+import com.example.fixcarapp.TrungTam.DanhSachTrungTam.ListServiceFragment;
 import com.example.fixcarapp.R;
 import com.example.fixcarapp.TaiKhoan.AccountFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -33,7 +33,7 @@ public class BottomMenuFragment extends Fragment {
             if (item.getItemId() == R.id.list) {
                 FragmentManager fragmentManager = getChildFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                ListServiceFragment fragment = ListServiceFragment.newInstance();
+                ListServiceFragment fragment = new ListServiceFragment();
                 fragmentTransaction.replace(R.id.frameLayout1,fragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();

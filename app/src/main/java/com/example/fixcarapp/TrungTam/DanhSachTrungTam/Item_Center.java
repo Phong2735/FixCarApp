@@ -1,20 +1,29 @@
-package com.example.fixcarapp.TrungTamHoTro;
+package com.example.fixcarapp.TrungTam.DanhSachTrungTam;
 
 import java.io.Serializable;
 
 public class Item_Center implements Serializable {
     String tenCenter,diachiCenter,email,mota,sdt;
-    byte[] Logo;
-
+    String logo;
+    String centerId;
     public Item_Center() {
     }
-
-    public byte[] getLogo() {
-        return Logo;
+    public Item_Center(String centerId,String tenCenter, String email, String logo, String diachiCenter, String sdt, String mota) {
+        this.centerId = centerId;
+        this.tenCenter = tenCenter;
+        this.email = email;
+        this.logo = logo;
+        this.diachiCenter = diachiCenter;
+        this.sdt = sdt;
+        this.mota = mota;
     }
 
-    public void setLogo(byte[] logo) {
-        Logo = logo;
+    public String getCenterId() {
+        return centerId;
+    }
+
+    public void setCenterId(String centerId) {
+        this.centerId = centerId;
     }
 
     public String getDiachiCenter() {
@@ -31,6 +40,14 @@ public class Item_Center implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
     }
 
     public String getMota() {

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CenterDetailFragment"
+    tools:context=".TrungTam.DanhSachTrungTam.CenterDetailFragment"
     android:id="@+id/centerdetailfragment">
     <ImageView
         android:id="@+id/imgGoBack"
@@ -42,10 +42,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Địa chỉ: "/>
-                <TextView
                     android:id="@+id/tvAdress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
@@ -55,10 +51,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="SDT: " />
-                <TextView
                     android:id="@+id/tvSdt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
@@ -67,10 +59,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Email: "/>
                 <TextView
                     android:id="@+id/tvEmail"
                     android:layout_width="wrap_content"

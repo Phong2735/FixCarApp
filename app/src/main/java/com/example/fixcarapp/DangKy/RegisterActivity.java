@@ -10,9 +10,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.fixcarapp.DBHelper;
 import com.example.fixcarapp.DangNhap.LoginActivity;
 import com.example.fixcarapp.R;
+import com.example.fixcarapp.TrungTam.DanhSachTrungTam.Item_Center;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -26,7 +26,7 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputEditText etName, etEmail, etPassword, etPasswordConfirm;
     private RadioGroup rgUserType;
     private Button btnRegister;
-    DBHelper dbHelper;
+    private  DatabaseReference databaseReference1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,14 +35,13 @@ public class RegisterActivity extends AppCompatActivity {
         // Firebase Authentication và Realtime Database
         mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-
+        databaseReference1 = FirebaseDatabase.getInstance().getReference("Centers");
         etName = findViewById(R.id.txtiename);
         etEmail = findViewById(R.id.txtieemail);
         etPassword = findViewById(R.id.txtiep);
         etPasswordConfirm = findViewById(R.id.txtierp);
         rgUserType = findViewById(R.id.rgUserType);
         btnRegister = findViewById(R.id.btnRegister);
-        dbHelper = new DBHelper(this);
         TextView tvLogin = findViewById(R.id.tvLogin);
         tvLogin.setOnClickListener(view -> {
             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
@@ -86,7 +85,17 @@ public class RegisterActivity extends AppCompatActivity {
                             databaseReference.child(userId).setValue(newUser)
                                     .addOnCompleteListener(task1 -> {
                                         if (task1.isSuccessful()) {
-                                            dbHelper.insertCenter(null,name,"","",email,"");
+                                            if(role.equals("Trung tâm cứu hộ"))
+                                            {
+                                                String centerId = userId;
+                                                Item_Center itemCenter = new Item_Center(centerId,name,email,"","","","");
+                                                databaseReference1.child(centerId).setValue(itemCenter)
+                                                        .addOnCompleteListener(task2 -> {
+                                                            if(task2.isSuccessful()) {
+                                                                Toast.makeText(RegisterActivity.this, "Đăng ký thành công trung tâm hỗ trợ", Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        });
+                                            }
                                             Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
                                             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                                             finish();
