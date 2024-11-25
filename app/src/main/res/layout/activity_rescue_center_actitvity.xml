@@ -61,7 +61,8 @@
         android:id="@+id/tvWarning"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Xin hãy cập nhật đầy đủ thông tin trước khi bắt đầu xác nhận yêu cầu. Vui lòng điền thông tin tại đây "
+        android:text="@string/warning_update_center"
+        android:clickable="true"
         android:layout_below="@+id/tvChangePass"
         android:visibility="gone"/>
     <TextView

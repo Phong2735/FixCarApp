@@ -87,6 +87,7 @@ public class SendRequestFragment extends Fragment implements LocationListener {
     private FirebaseUser user = auth.getCurrentUser();
     private Uri photoGalleryUri,cameraUri,imageToUseUri;
     private ProgressDialog progressDialog;
+    private Activity activity;
     public static SendRequestFragment newInstance(Item_Center itemCenter)
     {
         Bundle args = new Bundle();
@@ -120,8 +121,6 @@ public class SendRequestFragment extends Fragment implements LocationListener {
         Spinner spinTypeVehicle = (Spinner) view.findViewById(R.id.spinTypeVehicle);
         ImageView imgClose = view.findViewById(R.id.imgGoBack);
         List<String> vehicleTypes = Arrays.asList("Xe máy", "Ô tô", "Xe tải");
-
-        // Tạo adapter cho Spinner
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_item, vehicleTypes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -168,7 +167,7 @@ public class SendRequestFragment extends Fragment implements LocationListener {
         imvScenePhoto = view.findViewById(R.id.imvScenePhoto);
         progressDialog = new ProgressDialog(requireActivity());
         progressDialog.setMessage("Vui lòng đợi trong giây lát ...");
-
+        activity = getActivity();
         btnPhotoGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -425,7 +424,7 @@ public class SendRequestFragment extends Fragment implements LocationListener {
         getAddressFromLocation(latitude, longitude);
     }
     public void getAddressFromLocation(double latitude, double longitude) {
-        Geocoder geocoder = new Geocoder(requireActivity(), Locale.getDefault());
+        Geocoder geocoder = new Geocoder(activity, Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             if (addresses != null && !addresses.isEmpty()) {

@@ -49,9 +49,10 @@ public class CenterDetailFragment extends Fragment {
             Item_Center itemCenter = (Item_Center) args.getSerializable("item_center");
             if (itemCenter != null) {
                 tvName.setText(itemCenter.getTenCenter());
-                tvAdress.setText(itemCenter.getDiachiCenter());
-                tvDescription.setText(itemCenter.getMota());
+                tvAdress.setText("Địa chỉ: "+itemCenter.getDiachiCenter());
+                tvDescription.setText("Mô tả: "+itemCenter.getMota());
                 tvEmail.setText("Email:  "+itemCenter.getEmail());
+                tvSdt.setText("SDT: "+itemCenter.getSdt());
             }
         }
         tvAddRequest.setOnClickListener(view1 -> {
