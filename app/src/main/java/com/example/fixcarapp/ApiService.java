@@ -24,5 +24,5 @@ public interface ApiService {
             .create(ApiService.class);
     @Multipart
     @POST("upload")
-    Call<ScenePhoto> uploadScenePhoto(@Part MultipartBody.Part image);
+    Call<ScenePhoto> upload(@Part MultipartBody.Part image);
 }

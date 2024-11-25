@@ -4,14 +4,20 @@ public class User {
     public String userId;
     public String name;
     public String email;
+    public String avatar;
+    public String licensePlate;
+    public String phone;
     public String role;
 
     public User(){}
 
-    public User(String userId, String name, String email, String role) {
+    public User(String userId, String name, String email, String avatar, String licensePlate, String phone, String role) {
         this.userId = userId;
         this.name = name;
         this.email = email;
+        this.avatar = avatar;
+        this.licensePlate = licensePlate;
+        this.phone = phone;
         this.role = role;
     }
 
@@ -37,6 +43,30 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getLicensePlate() {
+        return licensePlate;
+    }
+
+    public void setLicensePlate(String licensePlate) {
+        this.licensePlate = licensePlate;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getRole() {
