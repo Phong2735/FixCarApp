@@ -1,37 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".TaiKhoan.AccountFragment"
     android:orientation="vertical">
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="hh:mm:ss"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="18dp"
+        android:layout_marginHorizontal="20dp"/>
     <LinearLayout
+        android:layout_centerInParent="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:layout_marginTop="30dp">
-        <ImageView
-            android:id="@+id/imgLogout"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:src="@drawable/ic_logout" />
-        <TextView
-            android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="20dp">
+        <Button
+            android:id="@+id/btnUpdateAccount"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Đăng xuất"
-            android:textSize="10dp"
-            android:layout_gravity="center_vertical"/>
+            android:text="Cập nhật tài khoản"/>
+        <Button
+            android:id="@+id/btnHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lịch sử yêu cầu"/>
+        <Button
+            android:id="@+id/btnUpdatePassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Đổi mật khẩu"/>
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Đăng xuất"/>
     </LinearLayout>
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/tvAddCenterHelper"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Thêm trung tâm hỗ trợ"/>
-    <TextView
-        android:id="@+id/tvUpdate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Suwar trung tam ho tro"/>
-
-</LinearLayout>
+</RelativeLayout>

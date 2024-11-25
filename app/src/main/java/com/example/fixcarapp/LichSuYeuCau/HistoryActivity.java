@@ -1,6 +1,8 @@
 package com.example.fixcarapp.LichSuYeuCau;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -12,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fixcarapp.R;
+import com.example.fixcarapp.TaiKhoan.AccountFragment;
 import com.example.fixcarapp.TaoYeuCau.Request;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,6 +36,7 @@ public class HistoryActivity extends AppCompatActivity {
     private ArrayList<Request> requestList;
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference myRequestsRef = database.getReference("Requests");
+    private ImageView imvGoBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +56,11 @@ public class HistoryActivity extends AppCompatActivity {
         requestList = new ArrayList<>();
         historyAdapter = new HistoryAdapter(HistoryActivity.this,requestList);
         rcvHistoryRequests.setAdapter(historyAdapter);
+
+        imvGoBack = findViewById(R.id.imvGoBack);
+        imvGoBack.setOnClickListener(v -> {
+            onBackPressed();
+        });
 
         myRequestsRef.orderByChild("email").equalTo(user.getEmail()).addValueEventListener(new ValueEventListener() {
             @Override
