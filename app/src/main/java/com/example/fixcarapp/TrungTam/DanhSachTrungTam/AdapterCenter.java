@@ -1,5 +1,6 @@
-package com.example.fixcarapp.TrungTamHoTro;
+package com.example.fixcarapp.TrungTam.DanhSachTrungTam;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
@@ -18,11 +19,13 @@ import java.util.List;
 public class AdapterCenter extends RecyclerView.Adapter<AdapterCenter.CenterViewHolder> {
     private List<Item_Center> list;
     private  clickItemListenner clickItemListenner;
+    private Context context;
     public  interface  clickItemListenner {
         void onClickItem(Item_Center itemCenter);
     }
 
-    public AdapterCenter( List<Item_Center> list,AdapterCenter.clickItemListenner clickItemListenner) {
+    public AdapterCenter(Context context, List<Item_Center> list,AdapterCenter.clickItemListenner clickItemListenner) {
+        this.context = context;
         this.list = list;
         this.clickItemListenner = clickItemListenner;
     }
@@ -40,13 +43,8 @@ public class AdapterCenter extends RecyclerView.Adapter<AdapterCenter.CenterView
         if(itemCenter==null) {
             return;
         }
-        byte[] logoByteArray = itemCenter.getLogo();  // Giả sử logo là mảng byte
-        if (logoByteArray != null) {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(logoByteArray, 0, logoByteArray.length);
-            holder.imgLogo.setImageBitmap(bitmap);  // Gán Bitmap vào ImageView
-        }
         holder.tvName.setText(itemCenter.getTenCenter());
-        holder.tvLocation.setText(itemCenter.diachiCenter);
+        holder.tvLocation.setText(itemCenter.getDiachiCenter());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

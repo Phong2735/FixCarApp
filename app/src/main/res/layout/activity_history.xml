@@ -5,7 +5,7 @@
     android:id="@+id/history"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HistoryActivity">
+    tools:context=".LichSuYeuCau.HistoryActivity">
     <ImageView
         android:id="@+id/imgGoBack"
         android:layout_width="45dp"

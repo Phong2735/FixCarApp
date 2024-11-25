@@ -42,7 +42,7 @@
             android:name=".TrungTam.RescueCenterActitvity"
             android:exported="false" />
         <activity
-            android:name=".HistoryActivity"
+            android:name=".LichSuYeuCau.HistoryActivity"
             android:exported="false" >
         </activity>
 

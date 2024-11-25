@@ -9,13 +9,21 @@ public class Request {
     private double longitude;
     private String problem;
     private String scenePhoto;
-    int centerId;
-    private String vehicle;
 
+    public String getCenterId() {
+        return centerId;
+    }
+
+    public void setCenterId(String centerId) {
+        this.centerId = centerId;
+    }
+
+    String centerId;
+    private String vehicle;
     private String status; // Thêm thuộc tính status
     private String phone;  // Thêm thuộc tính phone
 
-    public Request(int id, String phone, String incident, String problem, double longitude, double latitude, String address, String vehicle, String scenePhoto, String status, int centerId, String email) {
+    public Request(int id, String phone, String incident, String problem, double longitude, double latitude, String address, String vehicle, String scenePhoto, String status, String centerId, String email) {
         this.id = id;
         this.phone = phone;
         this.incident = incident;

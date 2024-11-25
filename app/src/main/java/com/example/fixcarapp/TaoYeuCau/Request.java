@@ -11,14 +11,14 @@ public class Request {
     String vehicle;
     String scenePhoto;
     String status;
-    int centerId;
+    String centerId;
     String email;
 
     public Request(){
 
     }
 
-    public Request(int id, String phone, String incident, String problem, double longitude, double latitude, String address, String vehicle, String scenePhoto, String status, int centerId, String email) {
+    public Request(int id, String phone, String incident, String problem, double longitude, double latitude, String address, String vehicle, String scenePhoto, String status, String centerId, String email) {
         this.id = id;
         this.phone = phone;
         this.incident = incident;
@@ -113,11 +113,11 @@ public class Request {
         this.status = status;
     }
 
-    public int getCenterId() {
+    public String getCenterId() {
         return centerId;
     }
 
-    public void setCenterId(int centerId) {
+    public void setCenterId(String centerId) {
         this.centerId = centerId;
     }
 

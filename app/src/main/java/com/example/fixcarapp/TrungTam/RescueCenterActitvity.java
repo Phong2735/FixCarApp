@@ -1,6 +1,7 @@
 package com.example.fixcarapp.TrungTam;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -13,19 +14,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 //import com.bumptech.glide.request.Request;
 
-import com.example.fixcarapp.TrungTam.Request;
-
-import com.example.fixcarapp.CenterInformationFragment;
+import com.example.fixcarapp.DangNhap.LoginActivity;
+import com.example.fixcarapp.TrungTam.DanhSachTrungTam.CenterInformationFragment;
 import com.example.fixcarapp.R;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -41,11 +37,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RescueCenterActitvity extends AppCompatActivity {
-    TextView tvName,tvWarning,tvUpdate,tvChangePass;
-    RecyclerView rcvListRequest;
-    FirebaseUser user;
+    private TextView tvName,tvWarning,tvUpdate,tvChangePass;
+    private RecyclerView rcvListRequest;
+    private FirebaseUser user;
     private DatabaseReference databaseReference;
-
+    private ImageView imgLogout;
     private RequestAdapter requestAdapter;
     private List<Request> requestList;
     private FirebaseAuth mAuth;
@@ -54,7 +50,7 @@ public class RescueCenterActitvity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rescue_center_actitvity);
         user = FirebaseAuth.getInstance().getCurrentUser();
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+        databaseReference = FirebaseDatabase.getInstance().getReference("Centers");
         tvName = findViewById(R.id.tvName1);
         tvUpdate = findViewById(R.id.tvUpdate);
         tvUpdate.setText("Cập nhật thông tin");
@@ -64,9 +60,14 @@ public class RescueCenterActitvity extends AppCompatActivity {
         tvChangePass.setTextColor(Color.BLUE);
         tvChangePass.setPaintFlags(tvUpdate.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         tvWarning = findViewById(R.id.tvWarning);
-        tvUpdate.setOnClickListener(view1 -> {
-            CenterInformationFragment centerInformationFragment = new CenterInformationFragment();
-            centerInformationFragment.show(getSupportFragmentManager(),"Update ");
+        imgLogout = findViewById(R.id.imgLogout);
+        imgLogout.setOnClickListener(view -> {
+            FirebaseAuth.getInstance().signOut(); // Đăng xuất người dùng hiện tại
+            Toast.makeText(RescueCenterActitvity.this, "Đăng xuất thành công!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(RescueCenterActitvity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
         });
         tvChangePass.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,31 +75,29 @@ public class RescueCenterActitvity extends AppCompatActivity {
                 changePass();
             }
         });
+        String userID = user.getUid();
         if(user!=null)
         {
-            String userID = user.getUid();
             databaseReference.child(userID).get()
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful() && task.getResult().exists()) {
-                            String name = task.getResult().child("name").getValue(String.class);
+                            String name = task.getResult().child("tenCenter").getValue(String.class);
                             tvName.setVisibility(View.VISIBLE);
                             tvName.setText(name);
+                            Bundle args = new Bundle();
+                            args.putString("name",name);
+                            tvUpdate.setOnClickListener(view1 -> {
+                                CenterInformationFragment centerInformationFragment = new CenterInformationFragment();
+                                centerInformationFragment.setArguments(args);
+                                centerInformationFragment.show(getSupportFragmentManager(),"Update ");
+                            });
                         }
                     });
         }
-
-
-        // Firebase authentication
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
-
-
-        // Reference to Firebase
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Requests");
-
-        // Get user information (optional)
         if (user != null) {
-            String userID = user.getUid();
             databaseReference.child(userID).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful() && task.getResult().exists()) {
                     String name = task.getResult().child("name").getValue(String.class);
@@ -107,8 +106,6 @@ public class RescueCenterActitvity extends AppCompatActivity {
                 }
             });
         }
-
-        // RecyclerView setup
         rcvListRequest = findViewById(R.id.rcvListRequest);
         requestList = new ArrayList<>();
         requestAdapter = new RequestAdapter(this, requestList);
@@ -120,7 +117,7 @@ public class RescueCenterActitvity extends AppCompatActivity {
                 requestList.clear();  // Xóa dữ liệu cũ
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Request request = snapshot.getValue(Request.class);
-                    if (request != null) {
+                    if (request != null && request.centerId.equals(userID)) {
                         requestList.add(request);  // Thêm yêu cầu mới vào danh sách
                     }
                 }
@@ -132,10 +129,6 @@ public class RescueCenterActitvity extends AppCompatActivity {
                 Log.e("RescueCenter", "Database error: " + databaseError.getMessage());
             }
         });
-
-
-
-
     }
     private void changePass()
     {

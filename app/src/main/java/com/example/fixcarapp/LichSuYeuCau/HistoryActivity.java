@@ -1,4 +1,4 @@
-package com.example.fixcarapp;
+package com.example.fixcarapp.LichSuYeuCau;
 
 import android.os.Bundle;
 
@@ -11,6 +11,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fixcarapp.R;
 import com.example.fixcarapp.TaoYeuCau.Request;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

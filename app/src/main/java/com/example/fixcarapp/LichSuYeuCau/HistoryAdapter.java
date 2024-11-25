@@ -1,4 +1,4 @@
-package com.example.fixcarapp;
+package com.example.fixcarapp.LichSuYeuCau;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.fixcarapp.MapActivity;
+import com.example.fixcarapp.R;
 import com.example.fixcarapp.TaoYeuCau.Request;
 
 import java.util.ArrayList;

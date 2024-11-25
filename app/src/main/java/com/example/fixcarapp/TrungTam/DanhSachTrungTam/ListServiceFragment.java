@@ -1,8 +1,8 @@
-package com.example.fixcarapp.TrungTamHoTro;
+package com.example.fixcarapp.TrungTam.DanhSachTrungTam;
 
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -10,15 +10,22 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.fixcarapp.CenterDetailFragment;
-import com.example.fixcarapp.DBHelper;
 import com.example.fixcarapp.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import org.checkerframework.checker.units.qual.A;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
@@ -26,27 +33,19 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class ListServiceFragment extends Fragment {
-    DBHelper dbHelper;
     ImageView imgClose,imgSearch;
     RecyclerView rcvListCenter;
     EditText edtSearch;
     TextView tvNotice;
     private  AdapterCenter adapter;
-    SQLiteDatabase db;
-    public static ListServiceFragment newInstance()
-    {
-        Bundle args = new Bundle();
-        ListServiceFragment fragment = new ListServiceFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
+    List<Item_Center> itemCenters;
+    DatabaseReference databaseReference;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list_service, container, false);
         imgClose = view.findViewById(R.id.imgGoBack);
         rcvListCenter = view.findViewById(R.id.rcvListCenterHelper);
-        dbHelper = new DBHelper(getActivity());
         edtSearch = view.findViewById(R.id.edtSearch);
         imgSearch = view.findViewById(R.id.imgSearch);
         tvNotice = view.findViewById(R.id.tvNotice);
@@ -59,53 +58,38 @@ public class ListServiceFragment extends Fragment {
             }
             return false;
         });
-        List<Item_Center> itemCenters = new ArrayList<>();
+        itemCenters = new ArrayList<>();
         List<Item_Center> listCenterSearch = new ArrayList<>();
-        Cursor cursor = dbHelper.getData("select * from db_center");
-        while (cursor.moveToNext())
-        {
-            Item_Center itemCenter = new Item_Center();
-            int logoIndex = cursor.getColumnIndex("logo");
-            if(logoIndex!=-1)
-            {
-                byte[] logo = cursor.getBlob(logoIndex);
-                itemCenter.setLogo(logo);
-            }
-            String tenCenter = cursor.getString(2);
-            String sdt = cursor.getString(3);
-            String diachi= cursor.getString(4);
-            String email = cursor.getString(5);
-            String mota = cursor.getString(6);
-            // Lấy ID tài nguyên hình ảnh
-            itemCenter.setTenCenter(tenCenter);
-            itemCenter.setEmail(email);
-            itemCenter.setDiachiCenter(diachi);
-            itemCenter.setMota(mota);
-            itemCenter.setSdt(sdt);
-            itemCenters.add(itemCenter);
-        }
-        cursor.close();
-        adapter = new AdapterCenter(itemCenters, new AdapterCenter.clickItemListenner() {
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("Centers");
+        adapter = new AdapterCenter(getContext(),itemCenters, new AdapterCenter.clickItemListenner() {
             @Override
             public void onClickItem(Item_Center itemCenter) {
-                Bundle bundle = new Bundle();
-                bundle.putByteArray("logo", itemCenter.getLogo());
-                bundle.putString("ten", itemCenter.getTenCenter());
-                bundle.putString("sdt", itemCenter.getSdt());
-                bundle.putString("diachi", itemCenter.getDiachiCenter());
-                bundle.putString("email", itemCenter.getEmail());
-                bundle.putString("mota", itemCenter.getMota());
-
-                CenterDetailFragment centerDetailFragment = new CenterDetailFragment();
-                centerDetailFragment.setArguments(bundle);
-                    getParentFragmentManager().beginTransaction()
-                            .replace(R.id.frameLayout1, centerDetailFragment)
-                            .addToBackStack(null)
-                            .commit();
+                CenterDetailFragment centerDetailFragment = CenterDetailFragment.newInstance(itemCenter);
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.frameLayout1, centerDetailFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
         });
-        rcvListCenter.setLayoutManager(new LinearLayoutManager(getContext()));
         rcvListCenter.setAdapter(adapter);
+        rcvListCenter.setLayoutManager(new LinearLayoutManager(getContext()));
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                itemCenters.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Item_Center item = snapshot.getValue(Item_Center.class);
+                    if (item != null) {
+                        itemCenters.add(item);
+                    }
+                }
+                adapter.notifyDataSetChanged();
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(getContext(),"Loi khi lay du lieu",Toast.LENGTH_SHORT).show();
+            }
+        });
         if(rcvListCenter!=null)
         {
             RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL);
@@ -120,7 +104,7 @@ public class ListServiceFragment extends Fragment {
                 {
                     tvNotice.setVisibility(View.GONE);
                     for (int i = 0; i < itemCenters.size(); i++) {
-                        String tx2 = removeAccents( itemCenters.get(i).diachiCenter.trim().toLowerCase());
+                        String tx2 = removeAccents( itemCenters.get(i).getTenCenter().trim().toLowerCase());
                         if(tx2.contains(tx1)) {
                             listCenterSearch.add(itemCenters.get(i));
                         }

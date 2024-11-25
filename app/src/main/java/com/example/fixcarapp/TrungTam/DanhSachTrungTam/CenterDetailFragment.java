@@ -1,4 +1,4 @@
-package com.example.fixcarapp;
+package com.example.fixcarapp.TrungTam.DanhSachTrungTam;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,17 +13,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.fixcarapp.R;
 import  com.example.fixcarapp.TaoYeuCau.SendRequestFragment;
-import com.example.fixcarapp.TrungTamHoTro.ListServiceFragment;
 
 public class CenterDetailFragment extends Fragment {
     TextView tvName,tvSdt,tvAdress,tvDescription,tvEmail;
     ImageView ingBack;
     ImageView imgLogo;
+    public static CenterDetailFragment newInstance(Item_Center itemCenter)
+    {
+        Bundle args = new Bundle();
+        CenterDetailFragment fragment = new CenterDetailFragment();
+        args.putSerializable("item_center",itemCenter);
+        fragment.setArguments(args);
+        return fragment;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_center_detail, container, false);
         tvName = view.findViewById(R.id.tvName);
         tvSdt = view.findViewById(R.id.tvSdt);
@@ -36,30 +44,19 @@ public class CenterDetailFragment extends Fragment {
         ingBack.setOnClickListener(v -> {
             getParentFragmentManager().popBackStack();
         });
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            byte[] logo = bundle.getByteArray("logo");
-            String ten = bundle.getString("ten");
-            String sdt = bundle.getString("sdt");
-            String diachi = bundle.getString("diachi");
-            String email = bundle.getString("email");
-            String mota = bundle.getString("mota");
-
-            // Cập nhật UI với dữ liệu
-            tvName.setText(ten);
-            tvSdt.setText(sdt);
-            tvAdress.setText(diachi);
-            tvEmail.setText(email);
-            tvDescription.setText(mota);
-
-            // Chuyển đổi logo từ byte[] thành Bitmap và đặt vào ImageView
-            if (logo != null) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(logo, 0, logo.length);
-                imgLogo.setImageBitmap(bitmap);
+        Bundle args = getArguments();
+        if (args != null) {
+            Item_Center itemCenter = (Item_Center) args.getSerializable("item_center");
+            if (itemCenter != null) {
+                tvName.setText(itemCenter.getTenCenter());
+                tvAdress.setText(itemCenter.getDiachiCenter());
+                tvDescription.setText(itemCenter.getMota());
+                tvEmail.setText("Email:  "+itemCenter.getEmail());
             }
         }
         tvAddRequest.setOnClickListener(view1 -> {
-            SendRequestFragment sendRequestFragment = new SendRequestFragment();
+            Item_Center itemCenter = (Item_Center) args.getSerializable("item_center");
+            SendRequestFragment sendRequestFragment = SendRequestFragment.newInstance(itemCenter);
             replaceFragment(sendRequestFragment);
         });
         return view;
