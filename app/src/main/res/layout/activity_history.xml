@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".LichSuYeuCau.HistoryActivity">
     <ImageView
-        android:id="@+id/imgGoBack"
+        android:id="@+id/imvGoBack"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:src="@drawable/ic_goback"
@@ -19,14 +19,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="32dp"
-        android:layout_toEndOf="@id/imgGoBack"
+        android:layout_toEndOf="@id/imvGoBack"
         android:text="Lịch sử yêu cầu đã gửi"
         android:textSize="30sp"
         android:textStyle="bold"
         />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_below="@id/imgGoBack"
+        android:layout_below="@id/imvGoBack"
         android:id="@+id/rcvHistoryRequests"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

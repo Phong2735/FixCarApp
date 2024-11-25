@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fixcarapp.DangNhap.LoginActivity;
 import com.example.fixcarapp.R;
+import com.example.fixcarapp.TaiKhoan.User;
 import com.example.fixcarapp.TrungTam.DanhSachTrungTam.Item_Center;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -108,19 +109,5 @@ public class RegisterActivity extends AppCompatActivity {
                         Toast.makeText(RegisterActivity.this, "Đăng ký thất bại: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
-    }
-
-    public static class User {
-        public String userId;
-        public String name;
-        public String email;
-        public String role;
-
-        public User(String userId, String name, String email, String role) {
-            this.userId = userId;
-            this.name = name;
-            this.email = email;
-            this.role = role;
-        }
     }
 }
