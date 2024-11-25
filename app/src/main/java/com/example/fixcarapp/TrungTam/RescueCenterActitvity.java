@@ -5,6 +5,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,7 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RescueCenterActitvity extends AppCompatActivity {
-    private TextView tvName,tvWarning,tvUpdate,tvChangePass;
+    private TextView tvName,tvWarning,tvUpdate,tvChangePass,tv1;
     private RecyclerView rcvListRequest;
     private FirebaseUser user;
     private DatabaseReference databaseReference;
@@ -56,13 +62,14 @@ public class RescueCenterActitvity extends AppCompatActivity {
         tvUpdate.setText("Cập nhật thông tin");
         tvUpdate.setTextColor(Color.BLUE);
         tvUpdate.setPaintFlags(tvUpdate.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        tv1 = findViewById(R.id.tv1);
         tvChangePass = findViewById(R.id.tvChangePass);
         tvChangePass.setTextColor(Color.BLUE);
         tvChangePass.setPaintFlags(tvUpdate.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         tvWarning = findViewById(R.id.tvWarning);
         imgLogout = findViewById(R.id.imgLogout);
         imgLogout.setOnClickListener(view -> {
-            FirebaseAuth.getInstance().signOut(); // Đăng xuất người dùng hiện tại
+            FirebaseAuth.getInstance().signOut();
             Toast.makeText(RescueCenterActitvity.this, "Đăng xuất thành công!", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(RescueCenterActitvity.this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -82,15 +89,33 @@ public class RescueCenterActitvity extends AppCompatActivity {
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful() && task.getResult().exists()) {
                             String name = task.getResult().child("tenCenter").getValue(String.class);
+                            String sdt = task.getResult().child("sdt").getValue(String.class);
+                            String mota = task.getResult().child("mota").getValue(String.class);
+                            String diachiCenter = task.getResult().child("diachiCenter").getValue(String.class);
+                            if(sdt.isEmpty()||mota.isEmpty()||diachiCenter.isEmpty())
+                            {
+                                tvWarning.setVisibility(View.VISIBLE);
+                                rcvListRequest.setVisibility(View.GONE);
+                                tv1.setVisibility(View.GONE);
+                            }
+                            else {
+                                tvWarning.setVisibility(View.GONE);
+                                rcvListRequest.setVisibility(View.VISIBLE);
+                                tv1.setVisibility(View.VISIBLE);
+                            }
                             tvName.setVisibility(View.VISIBLE);
                             tvName.setText(name);
                             Bundle args = new Bundle();
                             args.putString("name",name);
+                            args.putString("sdt",sdt);
+                            args.putString("mota",mota);
+                            args.putString("diachiCenter",diachiCenter);
                             tvUpdate.setOnClickListener(view1 -> {
                                 CenterInformationFragment centerInformationFragment = new CenterInformationFragment();
                                 centerInformationFragment.setArguments(args);
                                 centerInformationFragment.show(getSupportFragmentManager(),"Update ");
                             });
+                            updateCenter(args);
                         }
                     });
         }
@@ -194,5 +219,29 @@ public class RescueCenterActitvity extends AppCompatActivity {
         imgClose.setOnClickListener(view1 -> {
             dialog.dismiss();
         });
+    }
+    public void updateCenter (Bundle args) {
+        String text = tvWarning.getText().toString();
+
+        SpannableString spannableString = new SpannableString(text);
+        int startIndex = text.indexOf("tại đây");
+        int endIndex = startIndex + "tại đây".length();
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                CenterInformationFragment centerInformationFragment = new CenterInformationFragment();
+                centerInformationFragment.setArguments(args);
+                centerInformationFragment.show(getSupportFragmentManager(),"Update ");
+            }
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(true);
+                ds.setColor(Color.BLUE);
+            }
+        };
+        spannableString.setSpan(clickableSpan, startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tvWarning.setText(spannableString);
+        tvWarning.setMovementMethod(LinkMovementMethod.getInstance());
     }
 }

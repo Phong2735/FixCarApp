@@ -5,11 +5,13 @@
     android:layout_height="match_parent"
     tools:context=".TrungTam.DanhSachTrungTam.ListServiceFragment">
 
-    <ImageView
+    <TextView
         android:id="@+id/imgGoBack"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:src="@drawable/ic_goback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Danh sách trung tâm cứu hộ"
+        android:textSize="20dp"
+        android:fontFamily="@font/font"
         android:layout_marginVertical="30dp"
         android:layout_marginLeft="10dp"/>
     <LinearLayout

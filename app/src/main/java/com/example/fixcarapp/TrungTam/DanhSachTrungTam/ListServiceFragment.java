@@ -27,6 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.checkerframework.checker.units.qual.A;
 
+import java.lang.reflect.Field;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,6 @@ public class ListServiceFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list_service, container, false);
-        imgClose = view.findViewById(R.id.imgGoBack);
         rcvListCenter = view.findViewById(R.id.rcvListCenterHelper);
         edtSearch = view.findViewById(R.id.edtSearch);
         imgSearch = view.findViewById(R.id.imgSearch);
@@ -80,7 +80,20 @@ public class ListServiceFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Item_Center item = snapshot.getValue(Item_Center.class);
                     if (item != null) {
-                        itemCenters.add(item);
+                        String tenCenter = item.getTenCenter();
+                        String diachiCenter = item.getDiachiCenter();
+                        String email = item.getEmail();
+                        String mota = item.getMota();
+                        String sdt = item.getSdt();
+
+                        // Kiểm tra tất cả các thuộc tính khác null
+                        if (tenCenter != null && !tenCenter.isEmpty() &&
+                                diachiCenter != null && !diachiCenter.isEmpty() &&
+                                email != null && !email.isEmpty() &&
+                                mota != null && !mota.isEmpty() &&
+                                sdt != null && !sdt.isEmpty()) {
+                            itemCenters.add(item); // Thêm item vào danh sách
+                        }
                     }
                 }
                 adapter.notifyDataSetChanged();
@@ -117,9 +130,6 @@ public class ListServiceFragment extends Fragment {
                 }
                 adapter.updateAdapter(listCenterSearch);
             }
-        });
-        imgClose.setOnClickListener(view1 -> {
-            getParentFragmentManager().popBackStack();
         });
         return  view;
     }

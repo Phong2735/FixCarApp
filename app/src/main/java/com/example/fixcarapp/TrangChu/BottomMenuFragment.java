@@ -21,7 +21,11 @@ public class BottomMenuFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_bottom_menu, container, false);
         BottomNavigationView menu;
         menu = view.findViewById(R.id.bottomNavigationView);
-        replaceChild(new HomeFragment());
+        if (savedInstanceState == null) {
+            getChildFragmentManager().beginTransaction()
+                    .replace(R.id.frameLayout1, new HomeFragment())
+                    .commit();
+        }
         menu.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.home) {
                 FragmentManager fragmentManager = getChildFragmentManager();
