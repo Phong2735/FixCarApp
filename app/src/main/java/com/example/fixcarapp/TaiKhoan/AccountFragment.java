@@ -1,10 +1,12 @@
 package com.example.fixcarapp.TaiKhoan;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,7 +18,10 @@ import com.example.fixcarapp.LichSuYeuCau.HistoryActivity;
 import com.example.fixcarapp.TrungTam.DanhSachTrungTam.CenterInformationFragment;
 import com.example.fixcarapp.R;
 import com.example.fixcarapp.TrungTam.RescueCenterActitvity;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,6 +29,7 @@ import java.util.Locale;
 
 public class AccountFragment extends Fragment {
     private Button btnLogout,btnHistory,btnUpdatePassword,btnUpdateAccount;
+    private FirebaseUser user;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,9 +61,77 @@ public class AccountFragment extends Fragment {
             startActivity(intent);
         });
 
+        user = FirebaseAuth.getInstance().getCurrentUser();
         btnUpdatePassword = view.findViewById(R.id.btnUpdatePassword);
         btnUpdatePassword.setOnClickListener(v -> {
+            changePass();
         });
         return view;
+    }
+
+    private void changePass()
+    {
+        LayoutInflater inflater = LayoutInflater.from(requireContext());
+        View view = inflater.inflate(R.layout.fragment_change_password,null);
+        EditText edtOldPass,edtNewPass;
+        Button btnAccept;
+        TextView tvWarning;
+        ImageView imgClose;
+        edtOldPass = view.findViewById(R.id.edtOldPass);
+        edtNewPass = view.findViewById(R.id.edtNewpass);
+        btnAccept = view.findViewById(R.id.btnAccept);
+        imgClose = view.findViewById(R.id.imgClose);
+        tvWarning = view.findViewById(R.id.tvWarning);
+        btnAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String oldPassword = edtOldPass.getText().toString().trim();
+                String newPassword = edtNewPass.getText().toString().trim();
+                if(oldPassword == null && newPassword == null)
+                {
+                    tvWarning.setVisibility(View.VISIBLE);
+                    tvWarning.setText("Vui lòng nhập đủ mật khẩu cũ và mật khẩu mới");
+                }
+                if (oldPassword.equals(newPassword)) {
+                    tvWarning.setVisibility(View.VISIBLE);
+                    tvWarning.setText("Mật khẩu mới phải khác mật khẩu cũ");
+                    return; // Dừng lại nếu mật khẩu cũ và mới giống nhau
+                }
+                if (user != null) {
+                    String email = user.getEmail();
+                    if (!email.isEmpty() && !oldPassword.isEmpty() && !newPassword.isEmpty()) {
+                        AuthCredential credential = EmailAuthProvider.getCredential(email, oldPassword);
+                        user.reauthenticate(credential).addOnCompleteListener(reauthTask -> {
+                            if (reauthTask.isSuccessful()) {
+                                // Nếu xác thực lại thành công, cập nhật mật khẩu
+                                user.updatePassword(newPassword)
+                                        .addOnCompleteListener(updateTask -> {
+                                            if (updateTask.isSuccessful()) {
+                                                Toast.makeText(requireContext(), "Đổi mật khẩu thành công!", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(requireContext(), "Đổi mật khẩu thất bại: " + updateTask.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                            }
+                                        });
+                            } else {
+                                tvWarning.setVisibility(View.VISIBLE);
+                                tvWarning.setText("Mật khẩu cũ không đúng");
+                            }
+                        });
+                    } else {
+                        tvWarning.setVisibility(View.VISIBLE);
+                        tvWarning.setText("Vui lòng nhập đủ mật khẩu cũ và mật khẩu mới");
+                    }
+                } else {
+                    Toast.makeText(requireContext(), "Không lấy được thông tin người dùng", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setView(view);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        imgClose.setOnClickListener(view1 -> {
+            dialog.dismiss();
+        });
     }
 }

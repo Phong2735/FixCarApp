@@ -273,7 +273,7 @@ public class SendRequestFragment extends Fragment implements LocationListener {
     }
 
     public void apiUploadImage(MultipartBody.Part muPartBodyScenePhoto){
-        ApiService.apiService.uploadScenePhoto(muPartBodyScenePhoto).enqueue(new Callback<ScenePhoto>() {
+        ApiService.apiService.upload(muPartBodyScenePhoto).enqueue(new Callback<ScenePhoto>() {
             @Override
             public void onResponse(Call<ScenePhoto> call, Response<ScenePhoto> response) {
                 if (response.isSuccessful() && response.body() != null) {
