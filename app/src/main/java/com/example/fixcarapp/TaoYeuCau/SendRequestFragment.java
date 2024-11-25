@@ -26,9 +26,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import android.Manifest;
-import android.provider.MediaStore;
 import android.provider.OpenableColumns;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,9 +44,7 @@ import com.example.fixcarapp.ApiService;
 import com.example.fixcarapp.MapActivity;
 import com.example.fixcarapp.R;
 import com.example.fixcarapp.ScenePhoto;
-import com.example.fixcarapp.TrungTam.DanhSachTrungTam.CenterDetailFragment;
 import com.example.fixcarapp.TrungTam.DanhSachTrungTam.Item_Center;
-import com.example.fixcarapp.TrungTam.Request;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -61,7 +57,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -71,7 +69,6 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 
 public class SendRequestFragment extends Fragment implements LocationListener {
     private static final int REQUEST_READ_STORAGE = 100;
@@ -321,7 +318,10 @@ public class SendRequestFragment extends Fragment implements LocationListener {
                         centerId = itemCenter.getCenterId();
                     }
                 }
-                Request request = new Request(nextId,phone, incident, problem, longitude, latitude,currentLocation, vehicle,scenePhoto, "PENDING",centerId,user.getEmail());
+                Date currentDate = new Date();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, hh:mm:ss dd/MM/yyyy", new Locale("vi", "VN"));
+                String time = dateFormat.format(currentDate);
+                Request request = new Request(nextId,phone, incident, problem, longitude, latitude,currentLocation, vehicle,scenePhoto, "PENDING",centerId,user.getEmail(), time);
                 myRequestsRef.child(String.valueOf(nextId)).setValue(request, new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
