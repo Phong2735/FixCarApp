@@ -230,6 +230,7 @@ public class SendRequestFragment extends Fragment implements LocationListener {
             @Override
             public void onActivityResult(Boolean result) {
                 if (result != null && result) {
+                    photoGalleryUri = null;
                     imvScenePhoto.setImageURI(cameraUri);
                 } else {
                     Toast.makeText(requireActivity(), "Lỗi khi mở camera:", Toast.LENGTH_SHORT).show();
@@ -406,6 +407,7 @@ public class SendRequestFragment extends Fragment implements LocationListener {
             Intent intent = new Intent(Intent.ACTION_PICK);
             intent.setType("image/*");
             activityResultLauncherPhotoGallery.launch(intent);
+            cameraUri = null;
         } catch (Exception e) {
             Toast.makeText(requireActivity(), "Không thể truy cập tệp ảnh. Vui lòng kiểm tra quyền truy cập.", Toast.LENGTH_SHORT).show();
             e.printStackTrace();

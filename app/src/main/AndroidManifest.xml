@@ -36,6 +36,9 @@
         android:theme="@style/Theme.FixcarApp"
         tools:targetApi="31">
         <activity
+            android:name=".TrungTam.CompleteActivity"
+            android:exported="false" />
+        <activity
             android:name=".TaiKhoan.UpdateAccountActivity"
             android:exported="false" />
         <activity

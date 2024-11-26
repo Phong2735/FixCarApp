@@ -13,9 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.fixcarapp.R;
+import com.example.fixcarapp.TaoYeuCau.Request;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -42,35 +45,62 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         holder.tvAddress.setText(request.getAddress());
         holder.tvProblem.setText(request.getProblem());
         holder.tvVehicle.setText(request.getVehicle());
-        holder.tvPhone.setText(request.getPhone());    // Hiển thị số điện thoại
+        holder.tvPhone.setText(request.getPhone());
+        holder.tvTime.setText(request.getTime());
 
+        // Ẩn hoặc hiện các nút dựa trên trạng thái
 
-        // Xử lý sự kiện khi nhấn nút "Xác nhận"
-//        holder.btnConfirm.setOnClickListener(v -> {
-//            // Cập nhật trạng thái "accepted" và gửi email
-//            updateRequestStatus(request.getId(), "accepted", request.getEmail());
-//        });
+        if ("COMPLETED".equals(request.getStatus())) {
+            holder.btnConfirm.setVisibility(View.GONE);
+            holder.btnCancle.setVisibility(View.GONE);
+            holder.btnComplete.setVisibility(View.GONE);
+        } else {
+            // Hiển thị các button tùy thuộc vào trạng thái khác
+            if ("ACCEPTED".equals(request.getStatus())) {
+                holder.btnConfirm.setVisibility(View.GONE);
+                holder.btnCancle.setVisibility(View.GONE);
+                holder.btnComplete.setVisibility(View.VISIBLE);
+            } else {
+                holder.btnConfirm.setVisibility(View.VISIBLE);
+                holder.btnCancle.setVisibility(View.VISIBLE);
+                holder.btnComplete.setVisibility(View.GONE);
+            }
+        }
 
         // Sự kiện cho nút "Xác nhận"
         holder.btnConfirm.setOnClickListener(v -> {
-            updateRequestStatus(request.getId()); // Gọi hàm cập nhật trạng thái
-        });
 
-        // Set an OnClickListener on the entire item (or a button specifically)
-        holder.itemView.setOnClickListener(v -> {
-            // Create an Intent to navigate to the Detail activity
+            // Chuyển sang DetailActivity
             Intent intent = new Intent(context, DetailActivity.class);
-
-            // Pass the necessary data
             intent.putExtra("REQUEST_ID", request.getId());
             intent.putExtra("ADDRESS", request.getAddress());
             intent.putExtra("PROBLEM", request.getProblem());
             intent.putExtra("VEHICLE", request.getVehicle());
             intent.putExtra("PHONE", request.getPhone());
+            intent.putExtra("TIME", request.getTime());
             intent.putExtra("SCENE_PHOTO", request.getScenePhoto());
-
-            // Start the Detail activity
             context.startActivity(intent);
+
+            //  updateRequestStatus(request.getId()); // Gọi hàm cập nhật trạng thái
+            updateRequestStatus(request.getId(), "ACCEPTED");
+            request.setStatus("ACCEPTED");
+            notifyItemChanged(position);
+        });
+
+        // Sự kiện cho nút không nhận
+        holder.btnCancle.setOnClickListener(v -> {
+            updateRequestStatus(request.getId(), "UNACCEPTABLE");
+            request.setStatus("UNACCEPTABLE");
+            removeItem(position); // Gọi phương thức xóa
+        });
+
+        // Sự kiện nút "Hoàn thành"
+        holder.btnComplete.setOnClickListener(v -> {
+            updateRequestStatus(request.getId(), "COMPLETED");
+            request.setStatus("COMPLETED");
+
+            // Xóa item khỏi danh sách nếu trạng thái là COMPLETED
+            removeItem(position);
         });
 
 
@@ -88,10 +118,13 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     }
 
     public static class RequestViewHolder extends RecyclerView.ViewHolder {
-        TextView tvAddress, tvProblem, tvVehicle, tvStatus, tvPhone, tvId, tv_Email;
+        TextView tvAddress, tvProblem, tvVehicle, tvStatus, tvPhone, tvId, tv_Email, tvTime;
         ImageView imgScenePhoto;
 
         Button btnConfirm ; // Thêm nút "Xác nhận"
+        Button btnCancle;
+        Button btnComplete;
+
 
         public RequestViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -101,42 +134,73 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
             tvVehicle = itemView.findViewById(R.id.tvVehicle);
             tvPhone = itemView.findViewById(R.id.tvPhone);   // Ánh xạ TextView phone
             btnConfirm = itemView.findViewById(R.id.btnConfirm); // ánh xạ nút
+            btnCancle = itemView.findViewById(R.id.btnCancle);
+            btnComplete = itemView.findViewById(R.id.btnComplete);
             imgScenePhoto = itemView.findViewById(R.id.imgScenePhoto);
+            tvTime = itemView.findViewById(R.id.tvTime);
         }
     }
 
-//    private void updateRequestStatus(int requestId, String newStatus, String email) {
-//        // Tham chiếu đến Firebase Database
-//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("requests");
+//private void updateRequestStatus(int requestId) {
+//    // Tham chiếu đến nút "requests" trong Firebase
+//    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Requests");
 //
-//        // Tạo HashMap để cập nhật nhiều trường
-//        HashMap<String, Object> updates = new HashMap<>();
-//        updates.put("status", newStatus);  // Trường status
-//        updates.put("email", email);      // Trường email
-//
-//        // Cập nhật trạng thái mới và email
-//        databaseReference.child(String.valueOf(requestId)).updateChildren(updates)
-//                .addOnSuccessListener(aVoid -> {
-//                    Toast.makeText(context, "Đã xác nhận cứu hộ!", Toast.LENGTH_SHORT).show();
-//                })
-//                .addOnFailureListener(e -> {
-//                    Toast.makeText(context, "Lỗi khi xác nhận cứu hộ: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//                });
+//    // Cập nhật trường status thành "accepted"
+//    databaseReference.child(String.valueOf(requestId)).child("status").setValue("ACCEPTED")
+//            .addOnSuccessListener(aVoid -> {
+//                // Thông báo thành công
+//                Toast.makeText(context, "Trạng thái đã được cập nhật thành accepted!", Toast.LENGTH_SHORT).show();
+//            })
+//            .addOnFailureListener(e -> {
+//                // Thông báo lỗi
+//                Toast.makeText(context, "Cập nhật trạng thái thất bại: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//            });
+//}
+
+    private void updateRequestStatus(int requestId, String newStatus) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Requests");
+        databaseReference.child(String.valueOf(requestId)).child("status").setValue(newStatus)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(context, "Trạng thái đã được cập nhật thành " + newStatus + "!", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(context, "Cập nhật trạng thái thất bại: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+
+    public void removeItem(int position) {
+        requestList.remove(position); // Xóa khỏi danh sách
+        notifyItemRemoved(position); // Thông báo RecyclerView cập nhật
+        notifyItemRangeChanged(position, requestList.size()); // Cập nhật vị trí các item còn lại
+    }
+    //    public void setData(List<Request> requestList) {
+//        // Sắp xếp theo ID giảm dần
+//        Collections.sort(requestList, (r1, r2) -> Integer.compare(r2.getId(), r1.getId()));
+//        this.requestList = requestList;
+//        notifyDataSetChanged(); // Thông báo RecyclerView cập nhật
 //    }
-private void updateRequestStatus(int requestId) {
-    // Tham chiếu đến nút "requests" trong Firebase
-    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Requests");
+    public void setData(List<Request> requestList) {
+        // Lọc ra những mục không có trạng thái COMPLETED
+        this.requestList = new ArrayList<>();
+        for (Request request : requestList) {
+            if (!"COMPLETED".equals(request.getStatus())) {
+                this.requestList.add(request);
+            }
+        }
+        notifyDataSetChanged(); // Thông báo RecyclerView cập nhật
+    }
 
-    // Cập nhật trường status thành "accepted"
-    databaseReference.child(String.valueOf(requestId)).child("status").setValue("ACCEPTED")
-            .addOnSuccessListener(aVoid -> {
-                // Thông báo thành công
-                Toast.makeText(context, "Trạng thái đã được cập nhật thành accepted!", Toast.LENGTH_SHORT).show();
-            })
-            .addOnFailureListener(e -> {
-                // Thông báo lỗi
-                Toast.makeText(context, "Cập nhật trạng thái thất bại: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            });
-}
-}
+    public void setCompletedData(List<Request> allRequests) {
+        // Chỉ thêm các mục có trạng thái "COMPLETED"
+        this.requestList = new ArrayList<>();
+        for (Request request : allRequests) {
+            if ("COMPLETED".equals(request.getStatus())) {
+                this.requestList.add(request);
+            }
+        }
+        notifyDataSetChanged(); // Thông báo cập nhật giao diện
+    }
 
+
+}
