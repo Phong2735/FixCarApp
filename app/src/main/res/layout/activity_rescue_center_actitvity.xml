@@ -16,6 +16,11 @@
         android:textColor="@color/cl_text_den"
         android:layout_marginVertical="30dp"
         android:textStyle="bold" />
+    <TextView
+        android:id="@+id/tvCompletedRequests"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lịch sử cứu hộ" />
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

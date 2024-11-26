@@ -65,6 +65,12 @@
         android:text="Email"
         android:textSize="14sp"
         android:layout_marginTop="4dp" />
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Time"
+        android:textSize="14sp" />
 
     <!-- Scene Photo -->
     <ImageView
@@ -75,21 +81,26 @@
         android:scaleType="centerCrop" />
 
     <!-- Back Button -->
-    <ImageView
-        android:id="@+id/imgvPhone"
-        android:layout_width="102dp"
-        android:layout_height="48dp"
-        app:srcCompat="@android:drawable/ic_menu_call" />
-
-    <!-- Complete Button -->
-
-    <Button
-        android:id="@+id/btnComplete"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Complete"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="#5EEA45"
-        android:textColor="@android:color/white"/>
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/icLocation"
+            android:layout_width="79dp"
+            android:layout_height="match_parent"
+            android:contentDescription="Vị trí hiện tại"
+            android:src="@drawable/ic_location" />
+
+        <ImageView
+            android:id="@+id/imgvPhone"
+            android:layout_width="102dp"
+            android:layout_height="48dp"
+            app:srcCompat="@android:drawable/ic_menu_call" />
+
+
+    </LinearLayout>
+
+
 
 </LinearLayout>

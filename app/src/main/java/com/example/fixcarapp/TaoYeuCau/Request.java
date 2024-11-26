@@ -19,6 +19,7 @@ public class Request {
 
     }
 
+
     public Request(int id, String phone, String incident, String problem, double longitude, double latitude, String address, String vehicle, String scenePhoto, String status, String centerId, String email, String time) {
         this.id = id;
         this.phone = phone;
@@ -138,4 +139,6 @@ public class Request {
     public void setTime(String time) {
         this.time = time;
     }
+
+
 }

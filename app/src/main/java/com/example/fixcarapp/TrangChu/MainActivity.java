@@ -19,9 +19,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         if(savedInstanceState==null)
             replaceFragment(new BottomMenuFragment());
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("Them database");
-        myRef.setValue("Theo cach thu cong");
     }
     public void replaceFragment(Fragment fragment)
     {

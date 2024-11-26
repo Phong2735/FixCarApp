@@ -27,6 +27,8 @@ import androidx.recyclerview.widget.RecyclerView;
 //import com.bumptech.glide.request.Request;
 
 import com.example.fixcarapp.DangNhap.LoginActivity;
+//import com.example.fixcarapp.TaoYeuCau.Request;
+import com.example.fixcarapp.TaoYeuCau.Request;
 import com.example.fixcarapp.TrungTam.DanhSachTrungTam.CenterInformationFragment;
 import com.example.fixcarapp.R;
 import com.google.firebase.auth.AuthCredential;
@@ -43,7 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RescueCenterActitvity extends AppCompatActivity {
-    private TextView tvName,tvWarning,tvUpdate,tvChangePass,tv1;
+    private TextView tvName,tvWarning,tvUpdate,tvChangePass,tv1,  tvCompletedRequests;
     private RecyclerView rcvListRequest;
     private FirebaseUser user;
     private DatabaseReference databaseReference;
@@ -137,22 +139,75 @@ public class RescueCenterActitvity extends AppCompatActivity {
         rcvListRequest.setLayoutManager(new LinearLayoutManager(this));
         rcvListRequest.setAdapter(requestAdapter);
         databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                requestList.clear();  // Xóa dữ liệu cũ
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Request request = snapshot.getValue(Request.class);
-                    if (request != null && request.centerId.equals(userID)) {
-                        requestList.add(request);  // Thêm yêu cầu mới vào danh sách
-                    }
-                }
-                requestAdapter.notifyDataSetChanged();  // Cập nhật adapter
-            }
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                requestList.clear();  // Xóa dữ liệu cũ
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    Request request = snapshot.getValue(Request.class);
+//                    if (request != null && request.getCenterId().equals(userID)) {
+//                        requestList.add(request);  // Thêm yêu cầu mới vào danh sách
+//                    }
+//                }
+//                requestAdapter.notifyDataSetChanged();  // Cập nhật adapter
+//            }
+//@Override
+//public void onDataChange(DataSnapshot dataSnapshot) {
+//    // Xóa dữ liệu cũ
+//    requestList.clear();
+//
+//    // Tạo danh sách mới để lưu dữ liệu cập nhật
+//    List<Request> updatedRequestList = new ArrayList<>();
+//
+//    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//        Request request = snapshot.getValue(Request.class);
+//
+//        if (request != null) {
+//            // Thêm vào requestList nếu CenterId khớp với userID
+//            if (request.getCenterId() != null && request.getCenterId().equals(userID)) {
+//                requestList.add(request);
+//            }
+//
+//            // Thêm vào updatedRequestList nếu trạng thái khác "COMPLETED"
+//            if (!"COMPLETED".equals(request.getStatus())) {
+//                updatedRequestList.add(request);
+//            }
+//        }
+//    }
+//
+//    // Cập nhật adapter
+//    requestAdapter.setData(updatedRequestList); // Cập nhật với danh sách mới
+////    requestAdapter.notifyDataSetChanged();     // Đảm bảo hiển thị chính xác
+//}
+@Override
+public void onDataChange(DataSnapshot dataSnapshot) {
+    List<Request> updatedRequestList = new ArrayList<>();
+
+    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+        Request request = snapshot.getValue(Request.class);
+
+        if (request != null && request.getCenterId() != null && request.getCenterId().equals(userID)) {
+            updatedRequestList.add(request); // Chỉ thêm yêu cầu nếu CenterId khớp với userID
+        }
+    }
+
+    // Cập nhật adapter
+    requestAdapter.setData(updatedRequestList);
+}
+
+
+
+
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e("RescueCenter", "Database error: " + databaseError.getMessage());
             }
+        });
+
+        tvCompletedRequests = findViewById(R.id.tvCompletedRequests);
+        tvCompletedRequests.setOnClickListener(v -> {
+            Intent intent = new Intent(RescueCenterActitvity.this, CompleteActivity.class);
+            startActivity(intent);
         });
     }
     private void changePass()
