@@ -89,6 +89,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
 
         // Sự kiện cho nút không nhận
         holder.btnCancle.setOnClickListener(v -> {
+            updateRequestStatus(request.getId(), "UNACCEPTABLE");
+            request.setStatus("UNACCEPTABLE");
             removeItem(position); // Gọi phương thức xóa
         });
 

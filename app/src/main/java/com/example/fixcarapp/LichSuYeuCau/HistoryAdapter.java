@@ -47,8 +47,15 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         holder.tv_address.setText(request.getAddress());
         holder.tv_phone.setText(String.format("Số điện thoại: %s", request.getPhone()));
         holder.tv_time.setText(String.format("Thời gian: %s", request.getTime()));
-        holder.tv_status.setText(String.format("Trạng thái: %s", "PENDING".equals(request.getStatus()) ? "Chờ xác nhận" : "Đã xác nhận"));
-
+        String status = "";
+        if("ACCEPTED".equals(request.getStatus())){
+            status = "Đã xác nhận";
+        } else if ("UNACCEPTABLE".equals(request.getStatus())) {
+            status = "Trung tâm không xác nhận";
+        }else {
+            status = "Chờ xác nhận";
+        }
+        holder.tv_status.setText(String.format("Trạng thái: %s", status));
         Glide.with(context).load(request.getScenePhoto()).placeholder(R.drawable.ic_notfield).into(holder.imv_scene_photo);
 
         holder.imv_location.setOnClickListener(new View.OnClickListener() {
