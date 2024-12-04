@@ -118,6 +118,7 @@ public class SendRequestFragment extends Fragment implements LocationListener {
                 }
                 Uri uriPhoto = data.getData();
                 photoGalleryUri = uriPhoto;
+                imvScenePhoto.clearColorFilter();
                 Glide.with(requireActivity().getApplicationContext()).load(uriPhoto).into(imvScenePhoto);
             }else {
                 Toast.makeText(requireActivity(), "Error", Toast.LENGTH_SHORT).show();
@@ -248,7 +249,11 @@ public class SendRequestFragment extends Fragment implements LocationListener {
                     tvCreateRequest.setTextColor(lightColor);
                     tvScenePhoto.setTextColor(lightColor);
                     tvLocation.setTextColor(lightColor);
-                    imvScenePhoto.setColorFilter(lightColor);
+                    if (photoGalleryUri == null && cameraUri == null) {
+                        imvScenePhoto.setColorFilter(lightColor);
+                    } else {
+                        imvScenePhoto.clearColorFilter();
+                    }
                     imvLocation.setColorFilter(lightColor);
                     relativeLayout = requireView().findViewById(R.id.sendFragment);
                     relativeLayout.setBackgroundColor(darkColor);
@@ -275,6 +280,7 @@ public class SendRequestFragment extends Fragment implements LocationListener {
             ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CAMERA}, REQUEST_IMAGE_CAPTURE);
         }else {
             cameraUri = createUri();
+            imvScenePhoto.clearColorFilter();
             activityResultLauncherCamera.launch(cameraUri);
         }
     }
