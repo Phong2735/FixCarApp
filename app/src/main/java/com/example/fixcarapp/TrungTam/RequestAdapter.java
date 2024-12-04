@@ -184,7 +184,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         // Lọc ra những mục không có trạng thái COMPLETED
         this.requestList = new ArrayList<>();
         for (Request request : requestList) {
-            if (!"COMPLETED".equals(request.getStatus())) {
+            if (!"COMPLETED".equals(request.getStatus())&&!"UNACCEPTABLE".equals(request.getStatus())) {
                 this.requestList.add(request);
             }
         }
