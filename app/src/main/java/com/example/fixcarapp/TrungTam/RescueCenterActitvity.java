@@ -68,6 +68,7 @@ public class RescueCenterActitvity extends AppCompatActivity {
         tvChangePass = findViewById(R.id.tvChangePass);
         tvChangePass.setTextColor(Color.BLUE);
         tvChangePass.setPaintFlags(tvUpdate.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        tvCompletedRequests = findViewById(R.id.tvCompletedRequests);
         tvCompletedRequests.setTextColor(Color.BLUE);
         tvCompletedRequests.setPaintFlags(tvUpdate.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         tvWarning = findViewById(R.id.tvWarning);
