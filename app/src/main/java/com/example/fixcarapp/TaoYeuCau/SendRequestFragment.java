@@ -6,6 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -35,6 +40,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -78,8 +84,8 @@ public class SendRequestFragment extends Fragment implements LocationListener {
     private EditText edtPhone, edtIncident,edtProblem;
     private double longitude, latitude;
     private String currentLocation,vehicle;
-    private TextView tvLocation;
-    private ImageView imvLocation,imvScenePhoto;
+    private TextView tvLocation,tvCreateRequest,tvScenePhoto;
+    private ImageView imvLocation,imvScenePhoto,imgClose;
     private Button btnCamera,btnPhotoGallery,btnSendRequest;
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference myRequestsRef = database.getReference("Requests");
@@ -88,6 +94,11 @@ public class SendRequestFragment extends Fragment implements LocationListener {
     private Uri photoGalleryUri,cameraUri,imageToUseUri;
     private ProgressDialog progressDialog;
     private Activity activity;
+    private SensorManager sensorManager;
+    private Sensor lightSensor;
+    private SensorEventListener lightSensorListener;
+    RelativeLayout relativeLayout;
+
     public static SendRequestFragment newInstance(Item_Center itemCenter)
     {
         Bundle args = new Bundle();
@@ -107,6 +118,7 @@ public class SendRequestFragment extends Fragment implements LocationListener {
                 }
                 Uri uriPhoto = data.getData();
                 photoGalleryUri = uriPhoto;
+                imvScenePhoto.clearColorFilter();
                 Glide.with(requireActivity().getApplicationContext()).load(uriPhoto).into(imvScenePhoto);
             }else {
                 Toast.makeText(requireActivity(), "Error", Toast.LENGTH_SHORT).show();
@@ -119,7 +131,7 @@ public class SendRequestFragment extends Fragment implements LocationListener {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_send_request, container, false);
         Spinner spinTypeVehicle = (Spinner) view.findViewById(R.id.spinTypeVehicle);
-        ImageView imgClose = view.findViewById(R.id.imgGoBack);
+        imgClose = view.findViewById(R.id.imgGoBack);
         List<String> vehicleTypes = Arrays.asList("Xe máy", "Ô tô", "Xe tải");
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_item, vehicleTypes);
@@ -204,14 +216,71 @@ public class SendRequestFragment extends Fragment implements LocationListener {
                 openCamera();
             }
         });
+
+        handleLightSensor();
+        tvCreateRequest =view.findViewById(R.id.tvCreateRequest);
+        tvScenePhoto =view.findViewById(R.id.tvScenePhoto);
         return view;
     }
+
+    private void handleLightSensor() {
+        sensorManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
+        lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+
+        if (lightSensor == null) {
+            Toast.makeText(requireActivity(), "Thiết bị không hỗ trợ cảm biến ánh sáng", Toast.LENGTH_SHORT).show();
+        } else {
+            lightSensorListener = new SensorEventListener() {
+                @Override
+                public void onSensorChanged(SensorEvent event) {
+                    float lightLevel = event.values[0];
+                    float normalizedLight = Math.max(0, Math.min(lightLevel, 40000));
+                    float ratio = normalizedLight / 40000;
+                    int buttonColor = blendColors(Color.parseColor("#FF6200EE"), Color.WHITE, 1 - ratio);
+                    int darkColor = blendColors(Color.parseColor("#FFFFFF"), Color.BLACK, 1 - ratio);
+                    int lightColor = blendColors(Color.parseColor("#000000"), Color.WHITE, 1 - ratio);
+                    btnSendRequest.setBackgroundColor(buttonColor);
+                    btnSendRequest.setTextColor(darkColor);
+                    btnPhotoGallery.setBackgroundColor(buttonColor);
+                    btnPhotoGallery.setTextColor(darkColor);
+                    btnCamera.setBackgroundColor(buttonColor);
+                    btnCamera.setTextColor(darkColor);
+                    imgClose.setColorFilter(lightColor);
+                    tvCreateRequest.setTextColor(lightColor);
+                    tvScenePhoto.setTextColor(lightColor);
+                    tvLocation.setTextColor(lightColor);
+                    if (photoGalleryUri == null && cameraUri == null) {
+                        imvScenePhoto.setColorFilter(lightColor);
+                    } else {
+                        imvScenePhoto.clearColorFilter();
+                    }
+                    imvLocation.setColorFilter(lightColor);
+                    relativeLayout = requireView().findViewById(R.id.sendFragment);
+                    relativeLayout.setBackgroundColor(darkColor);
+                }
+
+                @Override
+                public void onAccuracyChanged(Sensor sensor, int accuracy) {
+                }
+            };
+            sensorManager.registerListener(lightSensorListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
+    }
+    private int blendColors(int color1, int color2, float ratio) {
+        int alpha = (int) (Color.alpha(color1) * (1 - ratio) + Color.alpha(color2) * ratio);
+        int red = (int) (Color.red(color1) * (1 - ratio) + Color.red(color2) * ratio);
+        int green = (int) (Color.green(color1) * (1 - ratio) + Color.green(color2) * ratio);
+        int blue = (int) (Color.blue(color1) * (1 - ratio) + Color.blue(color2) * ratio);
+        return Color.argb(alpha, red, green, blue);
+    }
+
 
     private void openCamera() {
         if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CAMERA}, REQUEST_IMAGE_CAPTURE);
         }else {
             cameraUri = createUri();
+            imvScenePhoto.clearColorFilter();
             activityResultLauncherCamera.launch(cameraUri);
         }
     }
@@ -479,6 +548,13 @@ public class SendRequestFragment extends Fragment implements LocationListener {
                     Toast.makeText(requireActivity(), "Bạn cần cấp quyền để mở vị trí hiện tại.", Toast.LENGTH_SHORT).show();
                 }
             }
+        }
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (sensorManager != null && lightSensorListener != null) {
+            sensorManager.unregisterListener(lightSensorListener);
         }
     }
 
