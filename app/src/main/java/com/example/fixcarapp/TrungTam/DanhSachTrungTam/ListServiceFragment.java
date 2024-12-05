@@ -92,7 +92,7 @@ public class ListServiceFragment extends Fragment {
                                 email != null && !email.isEmpty() &&
                                 mota != null && !mota.isEmpty() &&
                                 sdt != null && !sdt.isEmpty()) {
-                            itemCenters.add(item); // Thêm item vào danh sách
+                            itemCenters.add(item);
                         }
                     }
                 }
@@ -117,7 +117,7 @@ public class ListServiceFragment extends Fragment {
                 {
                     tvNotice.setVisibility(View.GONE);
                     for (int i = 0; i < itemCenters.size(); i++) {
-                        String tx2 = removeAccents( itemCenters.get(i).getTenCenter().trim().toLowerCase());
+                        String tx2 = removeAccents( itemCenters.get(i).getDiachiCenter().trim().toLowerCase());
                         if(tx2.contains(tx1)) {
                             listCenterSearch.add(itemCenters.get(i));
                         }

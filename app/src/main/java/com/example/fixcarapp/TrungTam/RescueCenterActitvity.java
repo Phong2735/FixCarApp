@@ -68,6 +68,8 @@ public class RescueCenterActitvity extends AppCompatActivity {
         tvChangePass = findViewById(R.id.tvChangePass);
         tvChangePass.setTextColor(Color.BLUE);
         tvChangePass.setPaintFlags(tvUpdate.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        tvCompletedRequests.setTextColor(Color.BLUE);
+        tvCompletedRequests.setPaintFlags(tvUpdate.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         tvWarning = findViewById(R.id.tvWarning);
         imgLogout = findViewById(R.id.imgLogout);
         imgLogout.setOnClickListener(view -> {
@@ -193,11 +195,6 @@ public void onDataChange(DataSnapshot dataSnapshot) {
     // Cập nhật adapter
     requestAdapter.setData(updatedRequestList);
 }
-
-
-
-
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e("RescueCenter", "Database error: " + databaseError.getMessage());
