@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.fixcarapp.DangNhap.LoginActivity;
 import com.example.fixcarapp.LichSuYeuCau.HistoryActivity;
+import com.example.fixcarapp.ThiFragment;
 import com.example.fixcarapp.TrungTam.DanhSachTrungTam.CenterInformationFragment;
 import com.example.fixcarapp.R;
 import com.example.fixcarapp.TrungTam.RescueCenterActitvity;
@@ -28,7 +29,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class AccountFragment extends Fragment {
-    private Button btnLogout,btnHistory,btnUpdatePassword,btnUpdateAccount;
+    private Button btnLogout,btnHistory,btnUpdatePassword,btnUpdateAccount,btnChangeLight;
     private FirebaseUser user;
 
     @Override

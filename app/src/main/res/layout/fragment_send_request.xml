@@ -118,6 +118,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Gửi yêu cầu"/>
+            <Button
+                android:id="@+id/btnChangeLight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Thay đổi ánh sáng"/>
         </LinearLayout>
     </ScrollView>
 

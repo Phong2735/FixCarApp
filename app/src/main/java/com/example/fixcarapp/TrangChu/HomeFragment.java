@@ -49,13 +49,13 @@ import java.util.List;
 import java.util.Locale;
 
 public class HomeFragment extends Fragment implements LocationListener, OnMapReadyCallback {
-    LocationManager locationManager;
-    double longitude, latitude;
-    String currentLocation;
-    TextView tvLocation,tvName;
-    ImageView icLocation;
+    private LocationManager locationManager;
+    private double longitude, latitude;
+    private String currentLocation;
+    private TextView tvLocation, tvName;
+    private ImageView icLocation;
     private DatabaseReference databaseReference;
-    FirebaseUser user;
+    private FirebaseUser user;
     private MapView mapView;
     private GoogleMap googleMap;
     private FusedLocationProviderClient fusedLocationClient;
@@ -65,15 +65,23 @@ public class HomeFragment extends Fragment implements LocationListener, OnMapRea
         super.onCreate(savedInstanceState);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_home, container, false);
-        TextView tvDate = (TextView) view.findViewById(R.id.tvDate);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
         tvName = view.findViewById(R.id.tvName);
-        Date currentDate = new Date();
+        tvLocation = view.findViewById(R.id.tvLocation);
         mapView = view.findViewById(R.id.mapView);
+        icLocation = view.findViewById(R.id.icLocation);
+
+        // Định dạng ngày giờ
+        TextView tvDate = view.findViewById(R.id.tvDate);
+        Date currentDate = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("vi", "VN"));
+        tvDate.setText(dateFormat.format(currentDate));
+
+        // MapView setup
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
         mapView.setOnTouchListener((v, event) -> {
@@ -88,12 +96,12 @@ public class HomeFragment extends Fragment implements LocationListener, OnMapRea
             }
             return false;
         });
+
+        // Firebase setup
         databaseReference = FirebaseDatabase.getInstance().getReference("Users");
         user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user!=null)
-        {
-            String userID = user.getUid();
-            databaseReference.child(userID).get()
+        if (user != null) {
+            databaseReference.child(user.getUid()).get()
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful() && task.getResult().exists()) {
                             String name = task.getResult().child("name").getValue(String.class);
@@ -102,31 +110,25 @@ public class HomeFragment extends Fragment implements LocationListener, OnMapRea
                         }
                     });
         }
-        tvLocation =view.findViewById(R.id.tvLocation);
+
+        icLocation.setOnClickListener(v -> {
+            Intent intent = new Intent(requireActivity(), MapActivity.class);
+            intent.putExtra("longitude", longitude);
+            intent.putExtra("latitude", latitude);
+            intent.putExtra("currentLocation", currentLocation);
+            startActivity(intent);
+        });
+
         locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(requireActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         } else {
             startLocationUpdates();
         }
 
-        icLocation = view.findViewById(R.id.icLocation);
-        icLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(requireActivity(), MapActivity.class);
-                intent.putExtra("longitude", longitude);
-                intent.putExtra("latitude", latitude);
-                intent.putExtra("currentLocation", currentLocation);
-                startActivity(intent);
-            }
-        });
-        // Định dạng ngày giờ theo tiếng Việt
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("vi", "VN"));
-        String formattedDate = dateFormat.format(currentDate);
-        tvDate.setText(formattedDate);
         return view;
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -158,8 +160,9 @@ public class HomeFragment extends Fragment implements LocationListener, OnMapRea
             locationManager.removeUpdates(this);
         }
     }
+
     private void startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(requireActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
         }
     }
@@ -176,72 +179,47 @@ public class HomeFragment extends Fragment implements LocationListener, OnMapRea
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             if (addresses != null && !addresses.isEmpty()) {
-                Address address = addresses.get(0);
-                String addressText = address.getAddressLine(0);
-                currentLocation = addressText;
-                tvLocation.setText(addressText);
+                currentLocation = addresses.get(0).getAddressLine(0);
+                tvLocation.setText(currentLocation);
             } else {
                 tvLocation.setText("Không thể lấy vị trí.");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("GeocoderError", "Error fetching address", e);
             tvLocation.setText("Lỗi khi lấy vị trí.");
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.checkSelfPermission(requireActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(requireActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-                } else {
-                    startLocationUpdates();
-                }
-            } else {
-                tvLocation.setText("Yêu cầu quyền truy cập.");
-            }
-        }
-    }
-
-    @Override
     public void onMapReady(@NonNull GoogleMap map) {
-        googleMap = map; // Đảm bảo rằng bạn đang gán đúng kiểu dữ liệu
-        // Thiết lập bản đồ
+        googleMap = map;
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
-        // Lấy vị trí hiện tại của người dùng
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+                if (location != null) {
+                    LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                    googleMap.addMarker(new MarkerOptions().position(userLocation).title("Vị trí của bạn"));
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
+                }
+                addRescuePoints();
+            });
         }
-        GoogleMap finalGoogleMap = googleMap;
-        fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
-            if (location != null) {
-                LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-
-                // Hiển thị marker vị trí hiện tại
-                finalGoogleMap.addMarker(new MarkerOptions().position(userLocation).title("Vị trí của bạn"));
-
-                // Di chuyển camera đến vị trí hiện tại
-                finalGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
-            }
-            addRescuePoints();
-        });
     }
+
     private void addRescuePoints() {
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Centers");
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        DatabaseReference centersRef = FirebaseDatabase.getInstance().getReference().child("Centers");
+        centersRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Item_Center item = snapshot.getValue(Item_Center.class);
                     if (item != null) {
-                        String tenCenter = item.getTenCenter();
-                        String diachiCenter = item.getDiachiCenter();
-                        LatLng rescuePoint = getLocationFromAddress(diachiCenter);
+                        LatLng rescuePoint = getLocationFromAddress(item.getDiachiCenter());
                         if (rescuePoint != null) {
-                            googleMap.addMarker(new MarkerOptions().position(rescuePoint).title(tenCenter));
+                            googleMap.addMarker(new MarkerOptions()
+                                    .position(rescuePoint)
+                                    .title(item.getTenCenter()));
                         }
                     }
                 }
@@ -249,22 +227,22 @@ public class HomeFragment extends Fragment implements LocationListener, OnMapRea
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.e("FirebaseError", "Error loading rescue points", error.toException());
             }
         });
     }
+
     private LatLng getLocationFromAddress(String address) {
-        Geocoder geocoder = new Geocoder(getContext()); // Lấy Geocoder từ context của activity hoặc fragment
-        List<Address> addresses;
+        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
         try {
-            addresses = geocoder.getFromLocationName(address, 1); // Lấy danh sách các địa chỉ từ địa chỉ văn bản
+            List<Address> addresses = geocoder.getFromLocationName(address, 1);
             if (addresses != null && !addresses.isEmpty()) {
-                Address location = addresses.get(0); // Lấy địa chỉ đầu tiên trong danh sách
-                return new LatLng(location.getLatitude(), location.getLongitude()); // Trả về LatLng
+                Address location = addresses.get(0);
+                return new LatLng(location.getLatitude(), location.getLongitude());
             }
         } catch (IOException e) {
-            Log.e("Geocoder", "Unable to get location from address", e);
+            Log.e("GeocoderError", "Error fetching location from address", e);
         }
-        return null; // Trả về null nếu không tìm được vị trí
+        return null;
     }
 }

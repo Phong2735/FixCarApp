@@ -30,6 +30,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import android.Manifest;
 import android.provider.OpenableColumns;
 import android.view.LayoutInflater;
@@ -50,6 +53,7 @@ import com.example.fixcarapp.ApiService;
 import com.example.fixcarapp.MapActivity;
 import com.example.fixcarapp.R;
 import com.example.fixcarapp.ScenePhoto;
+import com.example.fixcarapp.ThiFragment;
 import com.example.fixcarapp.TrungTam.DanhSachTrungTam.Item_Center;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -84,9 +88,9 @@ public class SendRequestFragment extends Fragment implements LocationListener {
     private EditText edtPhone, edtIncident,edtProblem;
     private double longitude, latitude;
     private String currentLocation,vehicle;
-    private TextView tvLocation,tvCreateRequest,tvScenePhoto;
+    private TextView tvLocation,tvScenePhoto,tvCreateRequest;
     private ImageView imvLocation,imvScenePhoto,imgClose;
-    private Button btnCamera,btnPhotoGallery,btnSendRequest;
+    private Button btnCamera,btnPhotoGallery,btnSendRequest,btnChangeLight;
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference myRequestsRef = database.getReference("Requests");
     private FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -220,13 +224,14 @@ public class SendRequestFragment extends Fragment implements LocationListener {
         handleLightSensor();
         tvCreateRequest =view.findViewById(R.id.tvCreateRequest);
         tvScenePhoto =view.findViewById(R.id.tvScenePhoto);
+        btnChangeLight = view.findViewById(R.id.btnChangeLight);
+
         return view;
     }
 
     private void handleLightSensor() {
         sensorManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
         lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-
         if (lightSensor == null) {
             Toast.makeText(requireActivity(), "Thiết bị không hỗ trợ cảm biến ánh sáng", Toast.LENGTH_SHORT).show();
         } else {
@@ -234,6 +239,17 @@ public class SendRequestFragment extends Fragment implements LocationListener {
                 @Override
                 public void onSensorChanged(SensorEvent event) {
                     float lightLevel = event.values[0];
+                    btnChangeLight.setOnClickListener(v -> {
+                        ThiFragment fragment = new ThiFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("lightlevel", String.valueOf(lightLevel));
+                        fragment.setArguments(bundle);
+                        FragmentManager fragmentManager = getParentFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.frameLayout1,fragment);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+                    });
                     float normalizedLight = Math.max(0, Math.min(lightLevel, 40000));
                     float ratio = normalizedLight / 40000;
                     int buttonColor = blendColors(Color.parseColor("#FF6200EE"), Color.WHITE, 1 - ratio);
